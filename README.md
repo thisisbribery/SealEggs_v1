@@ -16,26 +16,27 @@ No firmware is hosted here. You load the official `Sealegs.1.3.5.0.bin`, choose 
 | --- | --- | --- |
 | Live reverse delay | Reverse playback in Tape, BBD and Digi, with recording and feedback still running. Includes the click and overload fixes. | Tap **FREEZE** to toggle reverse. Hold **FREEZE (ALT)** + hold **TAP** for about 1 s to swap FREEZE between reverse and native Freeze. |
 | Secondary character on NOISE | NOISE becomes a second character control: Tape grunge, BBD chip decay, Digi data corruption. | Hold **FREEZE (ALT)** + hold **MOD SYNC** for about 1 s. Remembered across power cycles. |
+| Digi doppler | When TIME moves, Digi glides to the new time with a pitch bend (like tape) instead of the stock crossfade between overlapping delay lines. Big jumps bend in semitone steps, up to two octaves. Required by Live reverse. | None |
 | Tape pickup speed | Tape follows TIME changes about 5× faster (less lag). | None |
 | BBD light mode | BBD internal filter cap raised from 4.2 kHz to 12 kHz. | None |
 | Tape bright (extra) | Removes two built-in Tape tone shelves (about +3 to +5.5 dB above 1 kHz). | None |
 
-Every mod can be used on its own. Reverse and secondary character share one engine, which is added once if either is chosen.
+Mods can be mixed freely, with one rule: Live reverse needs Digi doppler (Digi reverse follows TIME through the doppler engine). Reverse, character and doppler share one engine, which is added once.
 
 ## Safety checks
 
 - The input must match the SHA-256 of official 1.3.5.0 (`ca90eb8f…adcf`). Anything else is refused.
 - The regions where new code goes must be empty in the input.
-- The output is checked against the expected SHA-256 for that exact combination (all 32 combinations are listed in `mods.js`). If it doesn't match, the download is blocked.
+- The output is checked against the expected SHA-256 for that exact combination (all 48 valid combinations are listed in `mods.js`). If it doesn't match, the download is blocked.
 
 ## Known differences
 
-- With reverse or character installed, Digi's forward delay runs about 1 ms (one audio block) later than stock. Tape and BBD are bit-identical to stock whenever reverse and character are off.
+- Digi doppler adds about 1 ms (one audio block) to Digi's delay time. Without doppler, Digi is bit-identical to stock whenever reverse and character are off; Tape and BBD always are.
 - With reverse installed, the short ALT+TAP (AUX CV destination) action fires when TAP is released, not when it is pressed.
 
 ## Verification
 
-The patches were verified in an ARM Cortex-M7 emulator running the firmware's own DSP code: bit-exact comparisons between builds, randomised sessions (model switches, reverse, character, time and feedback changes, delay-memory clears) and button-gesture tests. Reverse, character and the stability fixes were also tested on hardware. Reverse-only and character-only builds have so far been verified in emulation only.
+The patches were verified in an ARM Cortex-M7 emulator running the firmware's own DSP code: bit-exact comparisons between builds, randomised sessions (model switches, reverse, character, time and feedback changes, delay-memory clears) and button-gesture tests. Reverse, character and the stability fixes were also tested on hardware. Newer combinations (reverse without character, character or doppler on their own, character with stock Digi) have so far been verified in emulation only.
 
 ## Rollback
 

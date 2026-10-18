@@ -13,7 +13,7 @@
   --bg:#f6f4ef; --panel:#ffffff; --ink:#1d1f22; --muted:#62666d; --line:#dedad1; --soft:#efece4;
   --accent:#0b7285; --ok:#2b8a3e; --bad:#c92a2a; --warn:#b35c00;
   --free:#f1eee6; --used:#c9c4b8; --map-bg:#fbfaf7;
-  --c-core:#0b7285; --c-reverse:#3b5bdb; --c-char:#e8590c; --c-tape_pickup:#2f9e44; --c-bbd_light:#d4a400; --c-tape_bright:#c2255c;
+  --c-core:#0b7285; --c-reverse:#3b5bdb; --c-char:#e8590c; --c-tape_pickup:#2f9e44; --c-bbd_light:#d4a400; --c-tape_bright:#c2255c; --c-digi_doppler:#7048e8;
   --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
 }
@@ -22,14 +22,14 @@
     --bg:#121417; --panel:#1a1d21; --ink:#e9e7e2; --muted:#9aa0a8; --line:#2c3036; --soft:#22262b;
     --accent:#3bc9db; --ok:#69db7c; --bad:#ff8787; --warn:#ffa94d;
     --free:#1f2328; --used:#3d434b; --map-bg:#16191c;
-    --c-core:#22b8cf; --c-reverse:#748ffc; --c-char:#ff922b; --c-tape_pickup:#51cf66; --c-bbd_light:#fcc419; --c-tape_bright:#f06595;
+    --c-core:#22b8cf; --c-reverse:#748ffc; --c-char:#ff922b; --c-tape_pickup:#51cf66; --c-bbd_light:#fcc419; --c-tape_bright:#f06595; --c-digi_doppler:#b197fc;
   }
 }
 :root[data-theme="dark"]{
   --bg:#121417; --panel:#1a1d21; --ink:#e9e7e2; --muted:#9aa0a8; --line:#2c3036; --soft:#22262b;
   --accent:#3bc9db; --ok:#69db7c; --bad:#ff8787; --warn:#ffa94d;
   --free:#1f2328; --used:#3d434b; --map-bg:#16191c;
-  --c-core:#22b8cf; --c-reverse:#748ffc; --c-char:#ff922b; --c-tape_pickup:#51cf66; --c-bbd_light:#fcc419; --c-tape_bright:#f06595;
+  --c-core:#22b8cf; --c-reverse:#748ffc; --c-char:#ff922b; --c-tape_pickup:#51cf66; --c-bbd_light:#fcc419; --c-tape_bright:#f06595; --c-digi_doppler:#b197fc;
 }
 *{box-sizing:border-box}
 html,body{margin:0}
@@ -63,6 +63,10 @@ h1{font-size:30px;line-height:1.1;margin:0;letter-spacing:-.01em}
 .tog::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:var(--panel);transition:left .15s}
 .mod.on .tog{background:var(--mc)}
 .mod.on .tog::after{left:21px}
+.mod.locked .tog{opacity:.55}
+.mod.locked{cursor:default}
+.lockmsg{display:none;margin-top:6px;font-size:13px;font-weight:600;color:var(--mc)}
+.mod.locked .lockmsg{display:block}
 .mod input:focus-visible + .tog{outline:2px solid var(--accent);outline-offset:2px}
 .mod h3{margin:0;font-size:16.5px;display:flex;flex-wrap:wrap;gap:8px;align-items:baseline}
 .tag{font:500 11.5px var(--mono);color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:1px 6px}
@@ -171,7 +175,7 @@ footer p{margin:4px 0}
 
 <section class="step" id="step2">
   <h2><span class="num">2</span>Choose your mods</h2>
-  <p class="hint">Each mod can be used on its own. Reverse and secondary character share one engine, so it's added once if you pick either.</p>
+  <p class="hint">Mods can be mixed freely, with one rule: Live reverse needs Digi doppler, so picking reverse turns doppler on. Reverse, character and doppler share one engine, which is added once.</p>
   <div class="mods" id="mods"></div>
 </section>
 
@@ -213,7 +217,7 @@ footer p{margin:4px 0}
   <p>Keep your original <code>Sealegs.1.3.5.0.bin</code>. To go back to stock, flash it again with the official update procedure.</p>
   <h3>How it works</h3>
   <p>The page holds only the added code and a handful of changed constants: no part of the official firmware is included. After your file passes the version check, the patches are written into a copy in memory. The result is then checked against the expected SHA-256 for your exact mod combination.</p>
-  <p>The patches were verified in an ARM Cortex-M7 emulator running the firmware's own DSP code. Reverse, character and the stability fixes were also tested on hardware. Some newer combinations (reverse without character, character without reverse) have only been verified in emulation.</p>
+  <p>The patches were verified in an ARM Cortex-M7 emulator running the firmware's own DSP code. Reverse, character and the stability fixes were also tested on hardware. Newer combinations (reverse without character, character or doppler on their own, character with stock Digi) have so far only been verified in emulation.</p>
 </footer>
 </div>
 
@@ -235,6 +239,11 @@ const MODS = [
    more:`<dl><dt>Tape grunge</dt><dd>Adds distortion, grit and a mid bump, like a dirty old 7\u2033 reel-to-reel or a nasty cassette. Combine it with the DRIVE controls and filtering to get even nastier.</dd>
      <dt>BBD chip decay</dt><dd>Imagines BBD chips on the brink of overload and destruction: spluttering and farting out, dropping audio and getting noisy.</dd>
      <dt>Digi data corruption</dt><dd>Bends and warps the audio like a corrupted hard drive, or a pirated MP3 from the early 2000s that glitched partway through downloading. Octave stutters (up and down) and reverse loops increase in intensity.</dd></dl>`},
+  {key:'digi_doppler', title:'Digi doppler', tag:'Digi',
+   text:'When you move TIME, Digi glides to the new delay time with a pitch bend, like tape, instead of the stock crossfade between overlapping delay lines. Bigger jumps bend in semitone steps, up to two octaves either way.',
+   ctl:'Always on once installed. No controls.',
+   note:'Adds about 1 ms (one audio block) to Digi’s delay time. Required by Live reverse, because Digi reverse follows TIME through this engine.',
+   lock:'Included with Live reverse'},
   {key:'tape_pickup', title:'Tape pickup speed', tag:'Tape',
    text:'Tape follows TIME changes about 5× faster, so there’s less lag when you adjust the delay time.',
    ctl:'Always on once installed. No controls.', note:'Changes the Tape time smoothing from 0.0015 / 0.015 to 0.0075 / 0.075.'},
@@ -246,7 +255,7 @@ const MODS = [
    ctl:'Always on once installed. No controls.', note:'Optional extra. The original reverse builds included it.'}
 ];
 const COLOR = k => getComputedStyle(document.documentElement).getPropertyValue('--c-'+k).trim();
-const sel = {reverse:true, char:true, tape_pickup:true, bbd_light:true, tape_bright:false};
+const sel = {reverse:true, char:true, digi_doppler:true, tape_pickup:true, bbd_light:true, tape_bright:false};
 let stock = null, built = null, builtName = '', builtHash = '';
 
 /* ---------- SHA-256 (WebCrypto, with a small fallback for file:// in older browsers) ---------- */
@@ -282,15 +291,16 @@ const P = {};
 for (const [k,list] of Object.entries(D.patches)) P[k] = list.map(([a,d,label]) => ({addr:parseInt(a,16), data:b64(d), label}));
 function plan(s){
   const steps = [];
-  if (s.reverse || s.char) {
+  if (s.reverse || s.char || s.digi_doppler) {
     steps.push('core');
     if (s.char) steps.push('char_save'); else steps.push('no_char_gesture');
     if (!s.reverse) steps.push('native_freeze_only');
+    if (s.digi_doppler) steps.push('digi_doppler');
   }
   for (const k of ['tape_pickup','bbd_light','tape_bright']) if (s[k]) steps.push(k);
   return steps;
 }
-const OWNER = {core:'core', char_save:'char', no_char_gesture:'reverse', native_freeze_only:'char', tape_pickup:'tape_pickup', bbd_light:'bbd_light', tape_bright:'tape_bright'};
+const OWNER = {core:'core', digi_doppler:'digi_doppler', char_save:'char', no_char_gesture:'reverse', native_freeze_only:'char', tape_pickup:'tape_pickup', bbd_light:'bbd_light', tape_bright:'tape_bright'};
 function writes(s){
   const out = [];
   for (const step of plan(s)) for (const p of P[step]) out.push({...p, mod:OWNER[step], step});
@@ -304,20 +314,29 @@ function apply(src, s){
 }
 
 /* ---------- UI: mods ---------- */
-const modsEl = document.getElementById('mods');
+const modsEl = document.getElementById('mods'), cards = {};
 for (const m of MODS) {
   const el = document.createElement('div');
   el.className = 'mod'; el.style.setProperty('--mc', `var(--c-${m.key})`);
   el.innerHTML = `<input type="checkbox" data-k="${m.key}" aria-label="${m.title}"><span class="tog"></span>
     <div><h3>${m.title} <span class="tag${m.extra?' extra':''}">${m.extra?'Extra · ':''}${m.tag}</span></h3>
     <p>${m.text}</p><div class="ctl">${m.ctl}</div><div class="note">${m.note}</div>
+    ${m.lock ? `<div class="lockmsg">${m.lock}</div>` : ''}
     ${m.more ? `<details class="more"><summary>About the three characters</summary>${m.more}</details>` : ''}</div>`;
   const cb = el.querySelector('input'); cb.checked = sel[m.key];
-  el.addEventListener('click', e => { if (e.target.closest('details') || e.target === cb) return; cb.checked = !cb.checked; cb.dispatchEvent(new Event('change')); });
-  el.classList.toggle('on', cb.checked);
-  cb.addEventListener('change', () => { sel[m.key] = cb.checked; el.classList.toggle('on', cb.checked); invalidate(); render(); });
-  modsEl.appendChild(el);
+  el.addEventListener('click', e => { if (e.target.closest('details') || e.target === cb || cb.disabled) return; cb.checked = !cb.checked; cb.dispatchEvent(new Event('change')); });
+  cb.addEventListener('change', () => { sel[m.key] = cb.checked; syncMods(); invalidate(); render(); });
+  modsEl.appendChild(el); cards[m.key] = {el, cb};
 }
+function syncMods(){
+  if (sel.reverse) sel.digi_doppler = true;            // Digi reverse is built on the doppler engine
+  for (const [k, {el, cb}] of Object.entries(cards)) {
+    cb.checked = !!sel[k]; el.classList.toggle('on', cb.checked);
+    const locked = k === 'digi_doppler' && sel.reverse;
+    el.classList.toggle('locked', locked); cb.disabled = locked;
+  }
+}
+syncMods();
 
 /* ---------- UI: file ---------- */
 const drop = document.getElementById('drop'), fileIn = document.getElementById('file'), statusEl = document.getElementById('status');
@@ -391,7 +410,7 @@ function hitTest(px,py){
   const {cols,cs,gap,ox} = geo, cx = Math.floor((px-ox)/(cs+gap)), cy = Math.floor(py/(cs+gap));
   if (cx<0 || cx>=cols || cy<0) return -1; const i = cy*cols+cx; return i < NCELL ? i : -1;
 }
-const NAME = Object.fromEntries(MODS.map(m => [m.key, m.title])); NAME.core = 'Shared engine (reverse + character)';
+const NAME = Object.fromEntries(MODS.map(m => [m.key, m.title])); NAME.core = 'Shared engine (reverse, character, doppler)';
 function showTip(e){
   const r = canvas.getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top, i = hitTest(px,py);
   if (i<0) { tip.style.display='none'; return; }
@@ -436,7 +455,7 @@ function invalidate(){ built = null; document.getElementById('result').classList
 
 /* ---------- build ---------- */
 function tagName(s){
-  const t = {reverse:'reverse', char:'character', tape_pickup:'tape-pickup', bbd_light:'bbd-light', tape_bright:'tape-bright'};
+  const t = {reverse:'reverse', char:'character', digi_doppler:'digi-doppler', tape_pickup:'tape-pickup', bbd_light:'bbd-light', tape_bright:'tape-bright'};
   return 'Sealegs.1.3.5.0.sealeggs.' + D.keys.filter(k => s[k]).map(k => t[k]).join('+') + '.bin';
 }
 document.getElementById('buildBtn').addEventListener('click', async () => {
@@ -450,7 +469,7 @@ document.getElementById('buildBtn').addEventListener('click', async () => {
   built = b; builtName = tagName(sel); builtHash = h;
   rs.className = 'status show ok';
   rs.innerHTML = `<b>&#10003; Built and verified.</b> Matches the reference build for this combination.<div class="fname" style="margin-top:6px">${builtName}</div><div class="kv">SHA-256 ${h}</div>` +
-    (sel.reverse || sel.char ? `<div class="warnbox">Digi’s forward delay runs about 1 ms (one audio block) later with the reverse/character engine installed. Tape and BBD are identical to stock whenever reverse and character are off.</div>` : '');
+    (sel.digi_doppler ? `<div class="warnbox">Digi doppler adds about 1 ms (one audio block) to Digi’s delay time. Everything else is identical to stock whenever reverse and character are switched off.</div>` : '');
   document.getElementById('dlBtn').disabled = false; document.getElementById('notesBtn').disabled = false;
 });
 function save(name, data, type){
