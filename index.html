@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Seal Eggs Firmware Flasher</title>
+<meta name="description" content="Build a modded Sealegs 1.3.5.0 firmware in your browser from your own copy of the official firmware.">
+<style>
+:root{
+  --bg:#f6f4ef; --panel:#ffffff; --ink:#1d1f22; --muted:#62666d; --line:#dedad1; --soft:#efece4;
+  --accent:#0b7285; --ok:#2b8a3e; --bad:#c92a2a; --warn:#b35c00;
+  --free:#f1eee6; --used:#c9c4b8; --map-bg:#fbfaf7;
+  --c-core:#0b7285; --c-reverse:#3b5bdb; --c-char:#e8590c; --c-tape_pickup:#2f9e44; --c-bbd_light:#d4a400; --c-tape_bright:#c2255c;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121417; --panel:#1a1d21; --ink:#e9e7e2; --muted:#9aa0a8; --line:#2c3036; --soft:#22262b;
+    --accent:#3bc9db; --ok:#69db7c; --bad:#ff8787; --warn:#ffa94d;
+    --free:#1f2328; --used:#3d434b; --map-bg:#16191c;
+    --c-core:#22b8cf; --c-reverse:#748ffc; --c-char:#ff922b; --c-tape_pickup:#51cf66; --c-bbd_light:#fcc419; --c-tape_bright:#f06595;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121417; --panel:#1a1d21; --ink:#e9e7e2; --muted:#9aa0a8; --line:#2c3036; --soft:#22262b;
+  --accent:#3bc9db; --ok:#69db7c; --bad:#ff8787; --warn:#ffa94d;
+  --free:#1f2328; --used:#3d434b; --map-bg:#16191c;
+  --c-core:#22b8cf; --c-reverse:#748ffc; --c-char:#ff922b; --c-tape_pickup:#51cf66; --c-bbd_light:#fcc419; --c-tape_bright:#f06595;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 var(--sans);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:28px 16px 64px}
+header{display:flex;gap:18px;align-items:center;margin-bottom:22px}
+.logo{flex:0 0 auto;width:56px;height:56px}
+h1{font-size:30px;line-height:1.1;margin:0;letter-spacing:-.01em}
+.sub{color:var(--muted);margin:4px 0 0}
+.privacy{display:inline-flex;gap:8px;align-items:center;margin-top:10px;font-size:13px;color:var(--muted);background:var(--soft);border:1px solid var(--line);border-radius:999px;padding:4px 12px}
+.privacy b{color:var(--ink);font-weight:600}
+.step{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;margin:16px 0}
+.step h2{font-size:18px;margin:0 0 4px;display:flex;align-items:center;gap:10px}
+.num{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--panel);font:600 14px var(--sans)}
+.hint{color:var(--muted);margin:0 0 14px;font-size:14.5px}
+.drop{display:block;border:2px dashed var(--line);border-radius:12px;padding:26px 16px;text-align:center;cursor:pointer;transition:border-color .15s,background .15s}
+.drop:hover,.drop.over{border-color:var(--accent);background:var(--soft)}
+.drop strong{display:block;font-size:16px}
+.drop span{color:var(--muted);font-size:14px}
+.status{margin-top:14px;border-radius:10px;padding:12px 14px;font-size:14.5px;display:none}
+.status.show{display:block}
+.status.ok{background:color-mix(in srgb,var(--ok) 12%,transparent);border:1px solid color-mix(in srgb,var(--ok) 40%,transparent)}
+.status.bad{background:color-mix(in srgb,var(--bad) 12%,transparent);border:1px solid color-mix(in srgb,var(--bad) 40%,transparent)}
+.kv{font-family:var(--mono);font-size:12.5px;word-break:break-all;color:var(--muted);margin-top:6px}
+.mods{display:grid;gap:12px}
+.mod{display:grid;grid-template-columns:auto 1fr;gap:14px;border:1px solid var(--line);border-radius:12px;padding:14px 16px;cursor:pointer;position:relative;transition:border-color .15s,box-shadow .15s}
+.mod:hover{border-color:color-mix(in srgb,var(--mc) 55%,var(--line))}
+.mod.on{border-color:var(--mc);box-shadow:inset 4px 0 0 var(--mc)}
+.mod input{position:absolute;opacity:0;pointer-events:none}
+.tog{width:42px;height:24px;border-radius:999px;background:var(--used);position:relative;margin-top:2px;transition:background .15s}
+.tog::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:var(--panel);transition:left .15s}
+.mod.on .tog{background:var(--mc)}
+.mod.on .tog::after{left:21px}
+.mod input:focus-visible + .tog{outline:2px solid var(--accent);outline-offset:2px}
+.mod h3{margin:0;font-size:16.5px;display:flex;flex-wrap:wrap;gap:8px;align-items:baseline}
+.tag{font:500 11.5px var(--mono);color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:1px 6px}
+.tag.extra{color:var(--warn);border-color:color-mix(in srgb,var(--warn) 45%,var(--line))}
+.mod p{margin:4px 0 0;font-size:14.5px}
+.ctl{margin-top:8px;font-size:14px;background:var(--soft);border-radius:8px;padding:8px 10px}
+.ctl b{font-weight:600}
+.note{margin-top:6px;font-size:13.5px;color:var(--muted)}
+.mapwrap{position:relative}
+canvas#map{width:100%;display:block;border-radius:10px;background:var(--map-bg);border:1px solid var(--line);touch-action:none}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--panel);font:12px/1.45 var(--mono);padding:7px 9px;border-radius:7px;max-width:320px;white-space:pre-line;display:none;z-index:2;box-shadow:0 4px 16px rgba(0,0,0,.2)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin:12px 0 0;font-size:13px;color:var(--muted)}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.stats{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.stat{background:var(--soft);border-radius:10px;padding:8px 12px;min-width:120px}
+.stat b{display:block;font:600 19px var(--mono)}
+.stat span{font-size:12.5px;color:var(--muted)}
+details{margin-top:14px}
+summary{cursor:pointer;font-size:14.5px;color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
+th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-weight:500}
+td.mono{font-family:var(--mono);white-space:nowrap}
+.tablewrap{overflow-x:auto}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
+.build{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+button{font:600 15px var(--sans);border:0;border-radius:10px;padding:12px 18px;cursor:pointer;background:var(--accent);color:var(--panel)}
+button.secondary{background:var(--soft);color:var(--ink);border:1px solid var(--line)}
+button:disabled{opacity:.45;cursor:not-allowed}
+.result{margin-top:14px;display:none}
+.result.show{display:block}
+.fname{font:600 14px var(--mono);word-break:break-all}
+.warnbox{border-left:3px solid var(--warn);padding:2px 0 2px 12px;margin:10px 0;font-size:14px}
+footer{color:var(--muted);font-size:13.5px;margin-top:28px}
+footer h3{color:var(--ink);font-size:14.5px;margin:18px 0 4px}
+footer p{margin:4px 0}
+.themebtn{margin-left:auto;background:var(--soft);color:var(--ink);border:1px solid var(--line);padding:7px 11px;font-size:13px;border-radius:8px}
+@media (max-width:640px){
+  h1{font-size:24px}
+  .logo{width:44px;height:44px}
+  .step{padding:16px}
+  .mod{padding:12px}
+  header{flex-wrap:wrap}
+  .themebtn{margin-left:0}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <svg class="logo" viewBox="0 0 64 64" aria-hidden="true">
+    <ellipse cx="32" cy="36" rx="20" ry="24" fill="var(--soft)" stroke="var(--accent)" stroke-width="3"/>
+    <path d="M14 38c6-4 10 4 18 0s12-4 18 0" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/>
+    <path d="M17 47c6-4 9 4 15 0s10-4 15 0" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" opacity=".6"/>
+    <circle cx="25" cy="25" r="2.6" fill="var(--accent)"/>
+  </svg>
+  <div>
+    <h1>Seal Eggs firmware flasher</h1>
+    <p class="sub">Add community mods to your own copy of the official Sealegs 1.3.5.0 firmware.</p>
+    <div class="privacy">&#128274; <span><b>Runs entirely in your browser.</b> Your firmware is never uploaded, and this site hosts none.</span></div>
+  </div>
+  <button class="themebtn" id="themeBtn" type="button" aria-label="Toggle colour theme">Theme</button>
+</header>
+
+<section class="step" id="step1">
+  <h2><span class="num">1</span>Load your official firmware</h2>
+  <p class="hint">Use the unmodified <code>Sealegs.1.3.5.0.bin</code> from the manufacturer. Other versions are refused, because every patch targets exact addresses.</p>
+  <label class="drop" id="drop" tabindex="0">
+    <strong>Drop the .bin here or click to choose</strong>
+    <span>Checked against the known SHA-256 of 1.3.5.0</span>
+    <input type="file" id="file" accept=".bin,application/octet-stream" hidden>
+  </label>
+  <div class="status" id="status"></div>
+</section>
+
+<section class="step" id="step2">
+  <h2><span class="num">2</span>Choose your mods</h2>
+  <p class="hint">Each mod can be used on its own. Reverse and secondary character share one engine, so it's added once if you pick either.</p>
+  <div class="mods" id="mods"></div>
+</section>
+
+<section class="step" id="step3">
+  <h2><span class="num">3</span>See what changes</h2>
+  <p class="hint">The whole flash image, one square per 256 bytes. Grey is code and data already in the firmware, pale is empty space, and colours show what your selection writes. Hover or tap a square for details.</p>
+  <div class="mapwrap">
+    <canvas id="map" height="300" aria-label="Firmware flash map"></canvas>
+    <div class="tip" id="tip"></div>
+  </div>
+  <div class="legend" id="legend"></div>
+  <div class="stats" id="stats"></div>
+  <details>
+    <summary>List every patch site</summary>
+    <div class="tablewrap"><table id="sites"><thead><tr><th>Address</th><th>Bytes</th><th>Mod</th><th>What it is</th></tr></thead><tbody></tbody></table></div>
+  </details>
+</section>
+
+<section class="step" id="step4">
+  <h2><span class="num">4</span>Build and download</h2>
+  <p class="hint">Generates a modified image the same size as the original. Install it with the same update procedure you use for official firmware.</p>
+  <div class="build">
+    <button id="buildBtn" type="button" disabled>Build modded firmware</button>
+    <span class="hint" id="buildHint" style="margin:0">Load the official firmware first.</span>
+  </div>
+  <div class="result" id="result">
+    <div class="status show" id="resultStatus"></div>
+    <div class="build" style="margin-top:12px">
+      <button id="dlBtn" type="button">Download firmware</button>
+      <button id="notesBtn" type="button" class="secondary">Download build notes</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <h3>Before you flash</h3>
+  <p>This is an unofficial, community-made modification for education and preservation. It isn't affiliated with or endorsed by the module's manufacturer. Flashing modified firmware is at your own risk and may affect your warranty.</p>
+  <p>Keep your original <code>Sealegs.1.3.5.0.bin</code>. To go back to stock, flash it again with the official update procedure.</p>
+  <h3>How it works</h3>
+  <p>The page holds only the added code and a handful of changed constants: no part of the official firmware is included. After your file passes the version check, the patches are written into a copy in memory. The result is then checked against the expected SHA-256 for your exact mod combination.</p>
+  <p>The patches were verified in an ARM Cortex-M7 emulator running the firmware's own DSP code. Reverse, character and the stability fixes were also tested on hardware. Some newer combinations (reverse without character, character without reverse) have only been verified in emulation.</p>
+</footer>
+</div>
+
+<script src="mods.js"></script>
+<script>
+(function(){
+"use strict";
+const D = window.SEAL_EGGS;
+const BASE = 0x08000000, CELL = 256;
+const MODS = [
+  {key:'reverse', title:'Live reverse delay', tag:'Tape · BBD · Digi',
+   text:'Reverse playback in all three models. Recording and feedback keep running while reversed, so new audio keeps entering successive backward slices.',
+   ctl:'<b>Tap FREEZE</b> to turn reverse on or off. <b>Hold FREEZE (ALT) and hold TAP for about 1 s</b> to swap the FREEZE button between reverse and the original Freeze. Each power-up starts with FREEZE set to reverse, and reverse off.',
+   note:'Includes the click and overload fixes (join-search copy, sync-off fast path). New TIME settings apply at the next slice. ALT+TAP (AUX CV destination) now fires when TAP is released.'},
+  {key:'char', title:'Secondary character on NOISE', tag:'Tape grunge · BBD chip decay · Digi data corruption',
+   text:'Turns the NOISE knob into a second character control for each model: tape grunge, a dying-BBD stutter and sputter, or digital buffer corruption.',
+   ctl:'<b>Hold FREEZE (ALT) and hold MOD SYNC for about 1 s</b> to switch NOISE between normal noise and secondary character. The choice is remembered across power cycles.',
+   note:'BBD can still reach full runaway feedback with the character up.'},
+  {key:'tape_pickup', title:'Tape pickup speed', tag:'Tape',
+   text:'Tape follows TIME changes about 5× faster, so there’s less lag when you adjust the delay time.',
+   ctl:'Always on once installed. No controls.', note:'Changes the Tape time smoothing from 0.0015 / 0.015 to 0.0075 / 0.075.'},
+  {key:'bbd_light', title:'BBD light mode', tag:'BBD',
+   text:'Raises the BBD model’s internal filter cap from 4.2 kHz to 12 kHz for a brighter BBD. You can still darken it with the LPF.',
+   ctl:'Always on once installed. No controls.', note:'Very long BBD delays still darken naturally from the slower BBD clock.'},
+  {key:'tape_bright', title:'Tape bright', tag:'Tape', extra:true,
+   text:'Removes two built-in Tape tone shelves for a brighter tape repeat: about +3 to +5.5 dB from 1 kHz up.',
+   ctl:'Always on once installed. No controls.', note:'Optional extra. The original reverse builds included it.'}
+];
+const COLOR = k => getComputedStyle(document.documentElement).getPropertyValue('--c-'+k).trim();
+const sel = {reverse:true, char:true, tape_pickup:true, bbd_light:true, tape_bright:false};
+let stock = null, built = null, builtName = '', builtHash = '';
+
+/* ---------- SHA-256 (WebCrypto, with a small fallback for file:// in older browsers) ---------- */
+async function sha256(buf){
+  if (window.crypto && crypto.subtle) {
+    try { return hex(new Uint8Array(await crypto.subtle.digest('SHA-256', buf))); } catch(e) {}
+  }
+  return sha256js(buf);
+}
+function hex(u8){ return Array.from(u8, b => b.toString(16).padStart(2,'0')).join(''); }
+function sha256js(u8){
+  const K=new Uint32Array([0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2]);
+  const H=new Uint32Array([0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19]);
+  const l=u8.length, n=((l+9+63)>>6)<<6, m=new Uint8Array(n); m.set(u8); m[l]=0x80;
+  const dv=new DataView(m.buffer); dv.setUint32(n-4,(l*8)>>>0); dv.setUint32(n-8,Math.floor(l/0x20000000));
+  const w=new Uint32Array(64), r=(x,c)=>(x>>>c)|(x<<(32-c));
+  for(let o=0;o<n;o+=64){
+    for(let i=0;i<16;i++) w[i]=dv.getUint32(o+i*4);
+    for(let i=16;i<64;i++){ const a=w[i-15],b=w[i-2]; w[i]=(w[i-16]+(r(a,7)^r(a,18)^(a>>>3))+w[i-7]+(r(b,17)^r(b,19)^(b>>>10)))>>>0; }
+    let [a,b,c,d,e,f,g,h]=H;
+    for(let i=0;i<64;i++){
+      const t1=(h+(r(e,6)^r(e,11)^r(e,25))+((e&f)^(~e&g))+K[i]+w[i])>>>0, t2=((r(a,2)^r(a,13)^r(a,22))+((a&b)^(a&c)^(b&c)))>>>0;
+      h=g;g=f;f=e;e=(d+t1)>>>0;d=c;c=b;b=a;a=(t1+t2)>>>0;
+    }
+    H[0]+=a;H[1]+=b;H[2]+=c;H[3]+=d;H[4]+=e;H[5]+=f;H[6]+=g;H[7]+=h;
+  }
+  return Array.from(H,x=>x.toString(16).padStart(8,'0')).join('');
+}
+
+/* ---------- patches ---------- */
+const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+const P = {};
+for (const [k,list] of Object.entries(D.patches)) P[k] = list.map(([a,d,label]) => ({addr:parseInt(a,16), data:b64(d), label}));
+function plan(s){
+  const steps = [];
+  if (s.reverse || s.char) {
+    steps.push('core');
+    if (s.char) steps.push('char_save'); else steps.push('no_char_gesture');
+    if (!s.reverse) steps.push('native_freeze_only');
+  }
+  for (const k of ['tape_pickup','bbd_light','tape_bright']) if (s[k]) steps.push(k);
+  return steps;
+}
+const OWNER = {core:'core', char_save:'char', no_char_gesture:'reverse', native_freeze_only:'char', tape_pickup:'tape_pickup', bbd_light:'bbd_light', tape_bright:'tape_bright'};
+function writes(s){
+  const out = [];
+  for (const step of plan(s)) for (const p of P[step]) out.push({...p, mod:OWNER[step], step});
+  return out;
+}
+function comboKey(s){ return D.keys.map(k => s[k] ? '1':'0').join(''); }
+function apply(src, s){
+  const b = new Uint8Array(src);
+  for (const w of writes(s)) b.set(w.data, w.addr - BASE);
+  return b;
+}
+
+/* ---------- UI: mods ---------- */
+const modsEl = document.getElementById('mods');
+for (const m of MODS) {
+  const el = document.createElement('label');
+  el.className = 'mod'; el.style.setProperty('--mc', `var(--c-${m.key})`);
+  el.innerHTML = `<input type="checkbox" data-k="${m.key}"><span class="tog"></span>
+    <div><h3>${m.title} <span class="tag${m.extra?' extra':''}">${m.extra?'Extra · ':''}${m.tag}</span></h3>
+    <p>${m.text}</p><div class="ctl">${m.ctl}</div><div class="note">${m.note}</div></div>`;
+  const cb = el.querySelector('input'); cb.checked = sel[m.key];
+  el.classList.toggle('on', cb.checked);
+  cb.addEventListener('change', () => { sel[m.key] = cb.checked; el.classList.toggle('on', cb.checked); invalidate(); render(); });
+  modsEl.appendChild(el);
+}
+
+/* ---------- UI: file ---------- */
+const drop = document.getElementById('drop'), fileIn = document.getElementById('file'), statusEl = document.getElementById('status');
+drop.addEventListener('click', e => { if (e.target !== fileIn) fileIn.click(); });
+drop.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileIn.click(); } });
+['dragenter','dragover'].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.add('over'); }));
+['dragleave','drop'].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.remove('over'); }));
+drop.addEventListener('drop', e => { const f = e.dataTransfer.files[0]; if (f) load(f); });
+fileIn.addEventListener('change', () => { if (fileIn.files[0]) load(fileIn.files[0]); });
+function esc(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+async function load(f){
+  const buf = new Uint8Array(await f.arrayBuffer());
+  const h = await sha256(buf);
+  stock = null; invalidate();
+  statusEl.className = 'status show';
+  if (h === D.sha256 && buf.length === D.size) {
+    const bad = D.zero_regions.filter(([a,n]) => { const o = parseInt(a,16)-BASE; for (let i=0;i<n;i++) if (buf[o+i]) return true; return false; });
+    if (bad.length) { statusEl.classList.add('bad'); statusEl.innerHTML = '<b>Unexpected contents.</b> The hash matched but the free regions aren’t empty. Please report this.'; render(); return; }
+    stock = buf; statusEl.classList.add('ok');
+    statusEl.innerHTML = `<b>&#10003; Official Sealegs 1.3.5.0 confirmed.</b> ${esc(f.name)}, ${buf.length.toLocaleString()} bytes.<div class="kv">SHA-256 ${h}</div>`;
+  } else {
+    statusEl.classList.add('bad');
+    statusEl.innerHTML = `<b>&#10007; This isn’t the official Sealegs 1.3.5.0 image.</b> ${esc(f.name)}, ${buf.length.toLocaleString()} bytes. Load the unmodified file from the manufacturer. Already-modded files and other versions can’t be patched.<div class="kv">SHA-256 ${h}<br>expected ${D.sha256}</div>`;
+  }
+  render();
+}
+
+/* ---------- flash map ---------- */
+const canvas = document.getElementById('map'), ctx = canvas.getContext('2d'), tip = document.getElementById('tip');
+const NCELL = Math.ceil(D.size / CELL);
+let geo = null;
+function layout(){
+  const w = canvas.clientWidth, cols = w < 520 ? 48 : 72, rows = Math.ceil(NCELL/cols);
+  const gap = 1, cs = Math.max(3, Math.floor((w - (cols-1)*gap) / cols)), dpr = window.devicePixelRatio || 1;
+  const hgt = rows*cs + (rows-1)*gap;
+  canvas.style.height = hgt + 'px'; canvas.width = Math.round(w*dpr); canvas.height = Math.round(hgt*dpr);
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  geo = {cols, rows, cs, gap, ox: Math.floor((w - (cols*cs + (cols-1)*gap))/2)};
+}
+function cellInfo(){
+  const cells = new Array(NCELL);
+  for (let i=0;i<NCELL;i++) cells[i] = {used:null, hits:[]};
+  if (stock) for (let i=0;i<NCELL;i++){ let u=false; const s=i*CELL, e=Math.min(D.size,s+CELL); for (let j=s;j<e;j++) if (stock[j] && stock[j]!==0xff){u=true;break;} cells[i].used=u; }
+  for (const w of writes(sel)) {
+    const s = w.addr-BASE, e = s + w.data.length;
+    for (let c=Math.floor(s/CELL); c<=Math.floor((e-1)/CELL); c++) cells[c].hits.push(w);
+  }
+  return cells;
+}
+let cells = [];
+function drawMap(){
+  layout(); cells = cellInfo();
+  const {cols,cs,gap,ox} = geo, w = canvas.clientWidth;
+  ctx.clearRect(0,0,w,canvas.height);
+  const used = getComputedStyle(document.documentElement).getPropertyValue('--used').trim(), freeC = getComputedStyle(document.documentElement).getPropertyValue('--free').trim();
+  for (let i=0;i<NCELL;i++){
+    const x = ox + (i%cols)*(cs+gap), y = Math.floor(i/cols)*(cs+gap), c = cells[i];
+    ctx.fillStyle = c.used===null ? freeC : (c.used ? used : freeC);
+    if (c.used===null) ctx.globalAlpha = .55;
+    ctx.fillRect(x,y,cs,cs); ctx.globalAlpha = 1;
+    if (c.hits.length){
+      const big = c.hits.some(h => h.data.length > 16);
+      const col = COLOR(c.hits[c.hits.length-1].mod);
+      if (big) { ctx.fillStyle = col; ctx.fillRect(x,y,cs,cs); }
+      else { ctx.fillStyle = col; ctx.fillRect(x,y,cs,cs); ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--ink').trim(); ctx.lineWidth = 1; ctx.strokeRect(x+.5,y+.5,cs-1,cs-1); }
+    }
+  }
+}
+function hitTest(px,py){
+  if (!geo) return -1;
+  const {cols,cs,gap,ox} = geo, cx = Math.floor((px-ox)/(cs+gap)), cy = Math.floor(py/(cs+gap));
+  if (cx<0 || cx>=cols || cy<0) return -1; const i = cy*cols+cx; return i < NCELL ? i : -1;
+}
+const NAME = Object.fromEntries(MODS.map(m => [m.key, m.title])); NAME.core = 'Shared engine (reverse + character)';
+function showTip(e){
+  const r = canvas.getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top, i = hitTest(px,py);
+  if (i<0) { tip.style.display='none'; return; }
+  const a = BASE + i*CELL, c = cells[i];
+  let t = `0x${a.toString(16).padStart(8,'0')} – 0x${(a+CELL-1).toString(16).padStart(8,'0')}\n`;
+  t += c.used===null ? 'Load firmware to see stock contents' : (c.used ? 'Stock: code or data' : 'Stock: empty space');
+  const seen = new Set();
+  for (const h of c.hits){ const k = h.label+h.mod; if (seen.has(k)) continue; seen.add(k); t += `\n● ${NAME[h.mod]}: ${h.label} (${h.data.length} B)`; }
+  tip.textContent = t; tip.style.display = 'block';
+  const tw = tip.offsetWidth, th = tip.offsetHeight, W = canvas.parentElement.clientWidth;
+  tip.style.left = Math.min(W - tw, Math.max(0, px + 12)) + 'px';
+  tip.style.top = (py + 14 + th > canvas.clientHeight + 40 ? py - th - 10 : py + 14) + 'px';
+}
+canvas.addEventListener('pointermove', showTip);
+canvas.addEventListener('pointerdown', showTip);
+canvas.addEventListener('pointerleave', () => tip.style.display='none');
+window.addEventListener('resize', () => drawMap());
+
+/* ---------- legend, stats, table ---------- */
+function render(){
+  drawMap();
+  const ws = writes(sel), present = new Set(ws.map(w => w.mod));
+  document.getElementById('legend').innerHTML =
+    `<span><i style="background:var(--used)"></i>Stock code / data</span><span><i style="background:var(--free);border:1px solid var(--line)"></i>Empty in stock</span>` +
+    ['core',...MODS.map(m=>m.key)].filter(k => present.has(k)).map(k => `<span><i style="background:var(--c-${k})"></i>${NAME[k]}</span>`).join('') +
+    `<span><i style="background:transparent;outline:1.5px solid var(--ink);outline-offset:-1.5px"></i>Outlined: small edit inside stock code</span>`;
+  const bytes = ws.reduce((s,w) => s + w.data.length, 0), stockSites = ws.filter(w => w.data.length <= 16).length, added = ws.filter(w => w.data.length > 16).reduce((s,w)=>s+w.data.length,0);
+  document.getElementById('stats').innerHTML =
+    `<div class="stat"><b>${bytes.toLocaleString()}</b><span>bytes written</span></div>` +
+    `<div class="stat"><b>${added.toLocaleString()}</b><span>bytes of added code</span></div>` +
+    `<div class="stat"><b>${stockSites}</b><span>small edits to stock code</span></div>` +
+    `<div class="stat"><b>${(bytes/D.size*100).toFixed(2)}%</b><span>of the image</span></div>`;
+  document.querySelector('#sites tbody').innerHTML = ws.slice().sort((a,b)=>a.addr-b.addr).map(w =>
+    `<tr><td class="mono">0x${w.addr.toString(16).padStart(8,'0')}</td><td class="mono">${w.data.length}</td><td><span class="dot" style="background:var(--c-${w.mod})"></span>${NAME[w.mod]}</td><td>${esc(w.label)}</td></tr>`).join('') ||
+    '<tr><td colspan="4">No mods selected.</td></tr>';
+  const any = MODS.some(m => sel[m.key]);
+  const bb = document.getElementById('buildBtn'), hint = document.getElementById('buildHint');
+  bb.disabled = !stock || !any;
+  hint.textContent = !stock ? 'Load the official firmware first.' : (!any ? 'Select at least one mod.' : 'Ready.');
+}
+function invalidate(){ built = null; document.getElementById('result').classList.remove('show'); }
+
+/* ---------- build ---------- */
+function tagName(s){
+  const t = {reverse:'reverse', char:'character', tape_pickup:'tape-pickup', bbd_light:'bbd-light', tape_bright:'tape-bright'};
+  return 'Sealegs.1.3.5.0.sealeggs.' + D.keys.filter(k => s[k]).map(k => t[k]).join('+') + '.bin';
+}
+document.getElementById('buildBtn').addEventListener('click', async () => {
+  const b = apply(stock, sel), h = await sha256(b), want = D.refs[comboKey(sel)], rs = document.getElementById('resultStatus');
+  document.getElementById('result').classList.add('show');
+  if (h !== want || b.length !== D.size) {
+    built = null; rs.className = 'status show bad';
+    rs.innerHTML = `<b>Build check failed.</b> The output doesn’t match the reference for this combination, so the download is blocked.<div class="kv">got ${h}<br>expected ${want}</div>`;
+    document.getElementById('dlBtn').disabled = true; document.getElementById('notesBtn').disabled = true; return;
+  }
+  built = b; builtName = tagName(sel); builtHash = h;
+  rs.className = 'status show ok';
+  rs.innerHTML = `<b>&#10003; Built and verified.</b> Matches the reference build for this combination.<div class="fname" style="margin-top:6px">${builtName}</div><div class="kv">SHA-256 ${h}</div>` +
+    (sel.reverse || sel.char ? `<div class="warnbox">Digi’s forward delay runs about 1 ms (one audio block) later with the reverse/character engine installed. Tape and BBD are identical to stock whenever reverse and character are off.</div>` : '');
+  document.getElementById('dlBtn').disabled = false; document.getElementById('notesBtn').disabled = false;
+});
+function save(name, data, type){
+  const url = URL.createObjectURL(new Blob([data], {type})), a = document.createElement('a');
+  a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+document.getElementById('dlBtn').addEventListener('click', () => { if (built) save(builtName, built, 'application/octet-stream'); });
+document.getElementById('notesBtn').addEventListener('click', () => {
+  if (!built) return;
+  const strip = h => h.replace(/<[^>]+>/g,'');
+  const lines = ['Seal Eggs firmware flasher: build notes','', 'Firmware: '+builtName, 'Base: official Sealegs 1.3.5.0 (SHA-256 '+D.sha256+')', 'Result SHA-256: '+builtHash, '', 'Mods:'];
+  for (const m of MODS) if (sel[m.key]) lines.push('', '* '+m.title, '  '+m.text, '  Controls: '+strip(m.ctl), '  Note: '+m.note);
+  lines.push('', 'Rollback: flash your original Sealegs.1.3.5.0.bin with the official update procedure.', 'Unofficial community modification. Not affiliated with the manufacturer. Use at your own risk.');
+  save(builtName.replace(/\.bin$/, '.notes.txt'), lines.join('\n'), 'text/plain');
+});
+
+/* ---------- theme ---------- */
+const root = document.documentElement;
+try { const t = localStorage.getItem('sealeggs-theme'); if (t) root.setAttribute('data-theme', t); } catch(e) {}
+document.getElementById('themeBtn').addEventListener('click', () => {
+  const dark = root.getAttribute('data-theme') ? root.getAttribute('data-theme') === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  root.setAttribute('data-theme', dark ? 'light' : 'dark');
+  try { localStorage.setItem('sealeggs-theme', root.getAttribute('data-theme')); } catch(e) {}
+  render();
+});
+
+window.__sealeggs = {apply, writes, sha256js, plan};
+render();
+})();
+</script>
+</body>
+</html>
