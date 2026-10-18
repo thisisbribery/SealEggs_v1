@@ -1,5 +1,9 @@
 # Seal Eggs firmware flasher
 
+> **Unofficial, modified firmware. Use it entirely at your own risk.** The author accepts no responsibility for any damage, malfunction, lost settings or warranty issues that may result.
+
+Mods by **Bribery** ([@thisisbribery](https://www.instagram.com/thisisbribery/)).
+
 A browser tool that adds community mods to **your own copy** of the official Sealegs 1.3.5.0 firmware.
 
 **[Open the flasher](https://thisisbribery.github.io/SealEggs_v1/)**
@@ -41,7 +45,8 @@ Flash your original `Sealegs.1.3.5.0.bin` using the official update procedure.
 
 - `index.html`: the flasher (no build step, no dependencies)
 - `mods.js`: patch data (added code and changed constants only) plus reference hashes
+- `assets/`: the coin sprites
 
 ## Disclaimer
 
-An unofficial, community modification for education and preservation. Not affiliated with or endorsed by the module's manufacturer. Use at your own risk; flashing modified firmware may affect your warranty.
+Sealegs is designed and made by Intellijel. Seal Eggs is an unofficial, community modification for education and preservation. It isn't affiliated with, endorsed by or supported by Intellijel. Please don't contact Intellijel for help with modified firmware; flash the official firmware first if you need support. Use entirely at your own risk; flashing modified firmware may affect your warranty.

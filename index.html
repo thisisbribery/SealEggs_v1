@@ -96,6 +96,29 @@ button:disabled{opacity:.45;cursor:not-allowed}
 footer{color:var(--muted);font-size:13.5px;margin-top:28px}
 footer h3{color:var(--ink);font-size:14.5px;margin:18px 0 4px}
 footer p{margin:4px 0}
+.topwarn{background:#b3261e;color:#fff;text-align:center;font-size:14px;line-height:1.45;padding:10px 16px}
+.topwarn b{font-weight:700;letter-spacing:.01em}
+.byline{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.coinlink{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);background:var(--soft);border:1px solid var(--line);border-radius:999px;padding:4px 14px 4px 4px;font-size:14px;line-height:1.25}
+.coinlink:hover{border-color:#ff1fd6}
+.coinlink b{font-weight:700}
+.coinlink small{display:block;white-space:nowrap;color:var(--muted);font-size:12.5px}
+.coin{display:block;width:40px;height:40px;perspective:220px;flex:0 0 auto}
+.coin-inner{display:block;position:relative;width:100%;height:100%;transform-style:preserve-3d;animation:coinspin 1.4s steps(12) infinite}
+.coinlink:hover .coin-inner{animation-duration:.5s}
+.coin img{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.coin .back{transform:rotateY(180deg)}
+.coin .edge{display:block;position:absolute;left:50%;top:8%;width:5px;height:84%;margin-left:-2.5px;background:linear-gradient(#ffe48a,#d6961c 45%,#7a4a0a);transform:rotateY(90deg)}
+@keyframes coinspin{to{transform:rotateY(360deg)}}
+@media (prefers-reduced-motion:reduce){.coin-inner{animation:none}}
+.more{margin-top:10px}
+.more summary{color:var(--mc);font-weight:600;font-size:14px;list-style:none;display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+.more summary::-webkit-details-marker{display:none}
+.more summary::before{content:"\25B8";display:inline-block;transition:transform .15s}
+.more[open] summary::before{transform:rotate(90deg)}
+.more dl{margin:8px 0 0;font-size:14.5px}
+.more dt{font-weight:600}
+.more dd{margin:0 0 10px}
 .themebtn{margin-left:auto;background:var(--soft);color:var(--ink);border:1px solid var(--line);padding:7px 11px;font-size:13px;border-radius:8px}
 @media (max-width:640px){
   h1{font-size:24px}
@@ -108,7 +131,15 @@ footer p{margin:4px 0}
 </style>
 </head>
 <body>
+<div class="topwarn" role="note"><b>Unofficial, modified firmware.</b> Use it entirely at your own risk. The author accepts no responsibility for any damage, malfunction, lost settings or warranty issues that may result.</div>
 <div class="wrap">
+<div class="byline">
+  <a class="coinlink" href="https://www.instagram.com/thisisbribery/" target="_blank" rel="noopener">
+    <span class="coin" aria-hidden="true"><span class="coin-inner"><img src="assets/coin-front.png" alt=""><span class="edge"></span><img class="back" src="assets/coin-back.png" alt=""></span></span>
+    <span>Mods by <b>Bribery</b><small>@thisisbribery on Instagram &#8599;</small></span>
+  </a>
+  <button class="themebtn" id="themeBtn" type="button" aria-label="Toggle colour theme">Theme</button>
+</div>
 <header>
   <svg class="logo" viewBox="0 0 64 64" aria-hidden="true">
     <ellipse cx="32" cy="36" rx="20" ry="24" fill="var(--soft)" stroke="var(--accent)" stroke-width="3"/>
@@ -121,7 +152,6 @@ footer p{margin:4px 0}
     <p class="sub">Add community mods to your own copy of the official Sealegs 1.3.5.0 firmware.</p>
     <div class="privacy">&#128274; <span><b>Runs entirely in your browser.</b> Your firmware is never uploaded, and this site hosts none.</span></div>
   </div>
-  <button class="themebtn" id="themeBtn" type="button" aria-label="Toggle colour theme">Theme</button>
 </header>
 
 <section class="step" id="step1">
@@ -174,7 +204,8 @@ footer p{margin:4px 0}
 
 <footer>
   <h3>Before you flash</h3>
-  <p>This is an unofficial, community-made modification for education and preservation. It isn't affiliated with or endorsed by the module's manufacturer. Flashing modified firmware is at your own risk and may affect your warranty.</p>
+  <p>Sealegs is designed and made by Intellijel. Seal Eggs is an unofficial, community-made modification for education and preservation. It isn't affiliated with, endorsed by or supported by Intellijel.</p>
+  <p>Please don't contact Intellijel for help with modified firmware. If you need support, flash the official firmware first. Flashing modified firmware is entirely at your own risk and may affect your warranty.</p>
   <p>Keep your original <code>Sealegs.1.3.5.0.bin</code>. To go back to stock, flash it again with the official update procedure.</p>
   <h3>How it works</h3>
   <p>The page holds only the added code and a handful of changed constants: no part of the official firmware is included. After your file passes the version check, the patches are written into a copy in memory. The result is then checked against the expected SHA-256 for your exact mod combination.</p>
@@ -196,7 +227,10 @@ const MODS = [
   {key:'char', title:'Secondary character on NOISE', tag:'Tape grunge · BBD chip decay · Digi data corruption',
    text:'Turns the NOISE knob into a second character control for each model: tape grunge, a dying-BBD stutter and sputter, or digital buffer corruption.',
    ctl:'<b>Hold FREEZE (ALT) and hold MOD SYNC for about 1 s</b> to switch NOISE between normal noise and secondary character. The choice is remembered across power cycles.',
-   note:'BBD can still reach full runaway feedback with the character up.'},
+   note:'BBD can still reach full runaway feedback with the character up.',
+   more:`<dl><dt>Tape grunge</dt><dd>Adds distortion, grit and a mid bump, like a dirty old 7\u2033 reel-to-reel or a nasty cassette. Combine it with the DRIVE controls and filtering to get even nastier.</dd>
+     <dt>BBD chip decay</dt><dd>Imagines BBD chips on the brink of overload and destruction: spluttering and farting out, dropping audio and getting noisy.</dd>
+     <dt>Digi data corruption</dt><dd>Bends and warps the audio like a corrupted hard drive, or a pirated MP3 from the early 2000s that glitched partway through downloading. Octave stutters (up and down) and reverse loops increase in intensity.</dd></dl>`},
   {key:'tape_pickup', title:'Tape pickup speed', tag:'Tape',
    text:'Tape follows TIME changes about 5× faster, so there’s less lag when you adjust the delay time.',
    ctl:'Always on once installed. No controls.', note:'Changes the Tape time smoothing from 0.0015 / 0.015 to 0.0075 / 0.075.'},
@@ -268,12 +302,14 @@ function apply(src, s){
 /* ---------- UI: mods ---------- */
 const modsEl = document.getElementById('mods');
 for (const m of MODS) {
-  const el = document.createElement('label');
+  const el = document.createElement('div');
   el.className = 'mod'; el.style.setProperty('--mc', `var(--c-${m.key})`);
-  el.innerHTML = `<input type="checkbox" data-k="${m.key}"><span class="tog"></span>
+  el.innerHTML = `<input type="checkbox" data-k="${m.key}" aria-label="${m.title}"><span class="tog"></span>
     <div><h3>${m.title} <span class="tag${m.extra?' extra':''}">${m.extra?'Extra · ':''}${m.tag}</span></h3>
-    <p>${m.text}</p><div class="ctl">${m.ctl}</div><div class="note">${m.note}</div></div>`;
+    <p>${m.text}</p><div class="ctl">${m.ctl}</div><div class="note">${m.note}</div>
+    ${m.more ? `<details class="more"><summary>About the three characters</summary>${m.more}</details>` : ''}</div>`;
   const cb = el.querySelector('input'); cb.checked = sel[m.key];
+  el.addEventListener('click', e => { if (e.target.closest('details') || e.target === cb) return; cb.checked = !cb.checked; cb.dispatchEvent(new Event('change')); });
   el.classList.toggle('on', cb.checked);
   cb.addEventListener('change', () => { sel[m.key] = cb.checked; el.classList.toggle('on', cb.checked); invalidate(); render(); });
   modsEl.appendChild(el);
@@ -423,7 +459,7 @@ document.getElementById('notesBtn').addEventListener('click', () => {
   const strip = h => h.replace(/<[^>]+>/g,'');
   const lines = ['Seal Eggs firmware flasher: build notes','', 'Firmware: '+builtName, 'Base: official Sealegs 1.3.5.0 (SHA-256 '+D.sha256+')', 'Result SHA-256: '+builtHash, '', 'Mods:'];
   for (const m of MODS) if (sel[m.key]) lines.push('', '* '+m.title, '  '+m.text, '  Controls: '+strip(m.ctl), '  Note: '+m.note);
-  lines.push('', 'Rollback: flash your original Sealegs.1.3.5.0.bin with the official update procedure.', 'Unofficial community modification. Not affiliated with the manufacturer. Use at your own risk.');
+  lines.push('', 'Rollback: flash your original Sealegs.1.3.5.0.bin with the official update procedure.', 'Unofficial community modification by Bribery (@thisisbribery). Not affiliated with, endorsed by or supported by Intellijel. Use entirely at your own risk.');
   save(builtName.replace(/\.bin$/, '.notes.txt'), lines.join('\n'), 'text/plain');
 });
 
