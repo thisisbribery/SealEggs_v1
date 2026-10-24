@@ -85,8 +85,11 @@ button:disabled{opacity:.45;cursor:not-allowed}
 footer{color:var(--muted);font-size:13.5px;margin-top:28px}
 footer h3{color:var(--ink);font-size:14.5px;margin:18px 0 4px}
 footer p{margin:4px 0}
-.risk{background:#b3261e;color:#fff;border-radius:10px;font-size:14px;line-height:1.45;padding:10px 14px;margin:0 0 14px}
-.risk b{font-weight:700;letter-spacing:.01em}
+dialog.risk{max-width:440px;width:calc(100% - 32px);border:0;border-radius:14px;padding:0;background:var(--panel);color:var(--ink);box-shadow:0 12px 40px rgba(0,0,0,.35)}
+dialog.risk::backdrop{background:rgba(0,0,0,.55)}
+.risk-msg{background:#b3261e;color:#fff;font-size:15px;line-height:1.5;padding:18px 20px}
+.risk-msg b{display:block;font-size:17px;font-weight:700;margin-bottom:6px}
+.risk-actions{display:flex;justify-content:flex-end;gap:10px;padding:14px 20px}
 .byline{display:flex;align-items:center;gap:12px;margin-bottom:18px}
 .coinlink{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);background:var(--soft);border:1px solid var(--line);border-radius:999px;padding:4px 14px 4px 4px;font-size:14px;line-height:1.25}
 .coinlink:hover{border-color:var(--pink)}
@@ -147,7 +150,6 @@ footer p{margin:4px 0}
 
 <section class="step" id="step1">
   <h2><span class="num">1</span>Load your official firmware</h2>
-  <div class="risk" role="note"><b>Unofficial, modified firmware.</b> Use it entirely at your own risk. The author accepts no responsibility for any damage, malfunction, lost settings or warranty issues that may result.</div>
   <p class="hint">Use the unmodified <code>Sealegs.1.3.5.0.bin</code> from the manufacturer. Other versions are refused, because every patch targets exact addresses.</p>
   <label class="drop" id="drop" tabindex="0">
     <strong>Drop the .bin here or click to choose</strong>
@@ -166,11 +168,17 @@ footer p{margin:4px 0}
 <section class="step" id="step3">
   <h2><span class="num">3</span>Build and download</h2>
   <p class="hint">Generates a modified image the same size as the original. Install it with the same update procedure you use for official firmware.</p>
-  <div class="risk" role="note"><b>Unofficial, modified firmware.</b> Use it entirely at your own risk. The author accepts no responsibility for any damage, malfunction, lost settings or warranty issues that may result.</div>
   <div class="build">
     <button id="buildBtn" type="button" disabled>Build modded firmware</button>
     <span class="hint" id="buildHint" style="margin:0">Load the official firmware first.</span>
   </div>
+  <dialog class="risk" id="riskDlg" aria-labelledby="riskTitle">
+    <div class="risk-msg"><b id="riskTitle">Unofficial, modified firmware</b>Use it entirely at your own risk. The author accepts no responsibility for any damage, malfunction, lost settings or warranty issues that may result.</div>
+    <div class="risk-actions">
+      <button id="riskCancel" type="button" class="secondary">Cancel</button>
+      <button id="riskAccept" type="button">Accept</button>
+    </div>
+  </dialog>
   <div class="result" id="result">
     <div class="status show" id="resultStatus"></div>
     <div class="build" style="margin-top:12px">
@@ -356,7 +364,11 @@ function tagName(s){
   const t = {reverse:'reverse', char:'character', digi_doppler:'digi-doppler', tape_pickup:'tape-pickup', bbd_light:'bbd-light', tape_bright:'tape-bright'};
   return 'Sealegs.1.3.5.0.sealeggs.' + D.keys.filter(k => s[k]).map(k => t[k]).join('+') + '.bin';
 }
-document.getElementById('buildBtn').addEventListener('click', async () => {
+const riskDlg = document.getElementById('riskDlg');
+document.getElementById('buildBtn').addEventListener('click', () => riskDlg.showModal());
+document.getElementById('riskCancel').addEventListener('click', () => riskDlg.close());
+document.getElementById('riskAccept').addEventListener('click', () => { riskDlg.close(); build(); });
+async function build(){
   const b = apply(stock, sel), h = await sha256(b), want = D.refs[comboKey(sel)], rs = document.getElementById('resultStatus');
   document.getElementById('result').classList.add('show');
   if (h !== want || b.length !== D.size) {
@@ -369,7 +381,7 @@ document.getElementById('buildBtn').addEventListener('click', async () => {
   rs.innerHTML = `<b>&#10003; Built and verified.</b> Matches the reference build for this combination.<div class="fname" style="margin-top:6px">${builtName}</div><div class="kv">SHA-256 ${h}</div>` +
     (sel.digi_doppler ? `<div class="warnbox">Digi doppler adds about 1 ms (one audio block) to Digi’s delay time. Everything else is identical to stock whenever reverse and character are switched off.</div>` : '');
   document.getElementById('dlBtn').disabled = false; document.getElementById('notesBtn').disabled = false;
-});
+}
 function save(name, data, type){
   const url = URL.createObjectURL(new Blob([data], {type})), a = document.createElement('a');
   a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 2000);
