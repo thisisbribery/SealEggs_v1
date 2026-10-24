@@ -12,8 +12,7 @@
 :root{
   --bg:#f6f4ef; --panel:#ffffff; --ink:#1d1f22; --muted:#62666d; --line:#dedad1; --soft:#efece4;
   --accent:var(--pink); --ok:#2b8a3e; --bad:#c92a2a; --warn:#b35c00;
-  --free:#f1eee6; --used:#c9c4b8; --map-bg:#fbfaf7;
-  --c-core:var(--pink); --c-reverse:#3b5bdb; --c-char:#e8590c; --c-tape_pickup:#2f9e44; --c-bbd_light:#d4a400; --c-tape_bright:#a0522d; --c-digi_doppler:#7048e8;
+  --used:#c9c4b8;
   --pink:#ff1fd6;
   --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
@@ -22,15 +21,13 @@
   :root:not([data-theme="light"]){
     --bg:#121417; --panel:#1a1d21; --ink:#e9e7e2; --muted:#9aa0a8; --line:#2c3036; --soft:#22262b;
     --accent:var(--pink); --ok:#69db7c; --bad:#ff8787; --warn:#ffa94d;
-    --free:#1f2328; --used:#3d434b; --map-bg:#16191c;
-    --c-core:var(--pink); --c-reverse:#748ffc; --c-char:#ff922b; --c-tape_pickup:#51cf66; --c-bbd_light:#fcc419; --c-tape_bright:#e0a96d; --c-digi_doppler:#b197fc;
+    --used:#3d434b;
   }
 }
 :root[data-theme="dark"]{
   --bg:#121417; --panel:#1a1d21; --ink:#e9e7e2; --muted:#9aa0a8; --line:#2c3036; --soft:#22262b;
   --accent:var(--pink); --ok:#69db7c; --bad:#ff8787; --warn:#ffa94d;
-  --free:#1f2328; --used:#3d434b; --map-bg:#16191c;
-  --c-core:var(--pink); --c-reverse:#748ffc; --c-char:#ff922b; --c-tape_pickup:#51cf66; --c-bbd_light:#fcc419; --c-tape_bright:#e0a96d; --c-digi_doppler:#b197fc;
+  --used:#3d434b;
 }
 *{box-sizing:border-box}
 html,body{margin:0}
@@ -56,10 +53,11 @@ h1{font-size:30px;line-height:1.1;margin:0;letter-spacing:-.01em}
 .status.bad{background:color-mix(in srgb,var(--bad) 12%,transparent);border:1px solid color-mix(in srgb,var(--bad) 40%,transparent)}
 .kv{font-family:var(--mono);font-size:12.5px;word-break:break-all;color:var(--muted);margin-top:6px}
 .mods{display:grid;gap:12px}
-.mod{display:grid;grid-template-columns:auto 1fr;gap:14px;border:1px solid var(--line);border-radius:12px;padding:14px 16px;cursor:pointer;position:relative;transition:border-color .15s,box-shadow .15s}
+.mod{display:grid;grid-template-columns:auto auto 1fr;gap:14px;border:1px solid var(--line);border-radius:12px;padding:14px 16px;cursor:pointer;position:relative;transition:border-color .15s,box-shadow .15s}
 .mod:hover{border-color:color-mix(in srgb,var(--mc) 55%,var(--line))}
 .mod.on{border-color:var(--mc);box-shadow:inset 4px 0 0 var(--mc)}
 .mod input{position:absolute;opacity:0;pointer-events:none}
+.ico{width:40px;height:40px;color:var(--pink);fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
 .tog{width:42px;height:24px;border-radius:999px;background:var(--used);position:relative;margin-top:2px;transition:background .15s}
 .tog::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:var(--panel);transition:left .15s}
 .mod.on .tog{background:var(--mc)}
@@ -76,23 +74,6 @@ h1{font-size:30px;line-height:1.1;margin:0;letter-spacing:-.01em}
 .ctl{margin-top:8px;font-size:14px;background:var(--soft);border-radius:8px;padding:8px 10px}
 .ctl b{font-weight:600}
 .note{margin-top:6px;font-size:13.5px;color:var(--muted)}
-.mapwrap{position:relative}
-canvas#map{width:100%;display:block;border-radius:10px;background:var(--map-bg);border:1px solid var(--line);touch-action:none}
-.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--panel);font:12px/1.45 var(--mono);padding:7px 9px;border-radius:7px;max-width:320px;white-space:pre-line;display:none;z-index:2;box-shadow:0 4px 16px rgba(0,0,0,.2)}
-.legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin:12px 0 0;font-size:13px;color:var(--muted)}
-.legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;vertical-align:-1px}
-.stats{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
-.stat{background:var(--soft);border-radius:10px;padding:8px 12px;min-width:120px}
-.stat b{display:block;font:600 19px var(--mono)}
-.stat span{font-size:12.5px;color:var(--muted)}
-details{margin-top:14px}
-summary{cursor:pointer;font-size:14.5px;color:var(--accent)}
-table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
-th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}
-th{color:var(--muted);font-weight:500}
-td.mono{font-family:var(--mono);white-space:nowrap}
-.tablewrap{overflow-x:auto}
-.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
 .build{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
 button{font:600 15px var(--sans);border:0;border-radius:10px;padding:12px 18px;cursor:pointer;background:var(--accent);color:var(--panel)}
 button.secondary{background:var(--soft);color:var(--ink);border:1px solid var(--line)}
@@ -104,8 +85,8 @@ button:disabled{opacity:.45;cursor:not-allowed}
 footer{color:var(--muted);font-size:13.5px;margin-top:28px}
 footer h3{color:var(--ink);font-size:14.5px;margin:18px 0 4px}
 footer p{margin:4px 0}
-.topwarn{background:#b3261e;color:#fff;text-align:center;font-size:14px;line-height:1.45;padding:10px 16px}
-.topwarn b{font-weight:700;letter-spacing:.01em}
+.risk{background:#b3261e;color:#fff;border-radius:10px;font-size:14px;line-height:1.45;padding:10px 14px;margin:0 0 14px}
+.risk b{font-weight:700;letter-spacing:.01em}
 .byline{display:flex;align-items:center;gap:12px;margin-bottom:18px}
 .coinlink{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);background:var(--soft);border:1px solid var(--line);border-radius:999px;padding:4px 14px 4px 4px;font-size:14px;line-height:1.25}
 .coinlink:hover{border-color:var(--pink)}
@@ -128,26 +109,20 @@ footer p{margin:4px 0}
 .more dl{margin:8px 0 0;font-size:14.5px}
 .more dt{font-weight:600}
 .more dd{margin:0 0 10px}
-.fold{margin:16px 0}
-.fold>summary{list-style:none;color:inherit;font-size:inherit}
-.fold>summary::-webkit-details-marker{display:none}
-.fold>summary h2{margin:0}
-.fold[open]>summary h2{margin-bottom:4px}
-.chev{margin-left:auto;color:var(--accent);font-size:22px;line-height:1;transition:transform .15s}
-.fold[open] .chev{transform:rotate(90deg)}
 .themebtn{margin-left:auto;background:var(--soft);color:var(--ink);border:1px solid var(--line);padding:7px 11px;font-size:13px;border-radius:8px}
 @media (max-width:640px){
   h1{font-size:24px}
   .logo{width:44px;height:44px}
   .step{padding:16px}
-  .mod{padding:12px}
+  .mod{padding:12px;gap:8px 12px;grid-template-columns:auto 1fr;grid-template-rows:auto 1fr}
+  .ico{width:32px;height:32px;grid-column:1;grid-row:2;justify-self:center}
+  .mod>div{grid-column:2;grid-row:1/span 2}
   header{flex-wrap:wrap}
   .themebtn{margin-left:0}
 }
 </style>
 </head>
 <body>
-<div class="topwarn" role="note"><b>Unofficial, modified firmware.</b> Use it entirely at your own risk. The author accepts no responsibility for any damage, malfunction, lost settings or warranty issues that may result.</div>
 <div class="wrap">
 <div class="byline">
   <a class="coinlink" href="https://www.instagram.com/thisisbribery/" target="_blank" rel="noopener">
@@ -172,6 +147,7 @@ footer p{margin:4px 0}
 
 <section class="step" id="step1">
   <h2><span class="num">1</span>Load your official firmware</h2>
+  <div class="risk" role="note"><b>Unofficial, modified firmware.</b> Use it entirely at your own risk. The author accepts no responsibility for any damage, malfunction, lost settings or warranty issues that may result.</div>
   <p class="hint">Use the unmodified <code>Sealegs.1.3.5.0.bin</code> from the manufacturer. Other versions are refused, because every patch targets exact addresses.</p>
   <label class="drop" id="drop" tabindex="0">
     <strong>Drop the .bin here or click to choose</strong>
@@ -187,24 +163,10 @@ footer p{margin:4px 0}
   <div class="mods" id="mods"></div>
 </section>
 
-<details class="step fold" id="step3">
-  <summary><h2><span class="num">3</span>See what changes<span class="chev" aria-hidden="true">&#9656;</span></h2></summary>
-  <p class="hint">The whole flash image, one square per 256 bytes. Grey is code and data already in the firmware, pale is empty space, and colours show what your selection writes. Hover or tap a square for details.</p>
-  <div class="mapwrap">
-    <canvas id="map" height="300" aria-label="Firmware flash map"></canvas>
-    <div class="tip" id="tip"></div>
-  </div>
-  <div class="legend" id="legend"></div>
-  <div class="stats" id="stats"></div>
-  <details>
-    <summary>List every patch site</summary>
-    <div class="tablewrap"><table id="sites"><thead><tr><th>Address</th><th>Bytes</th><th>Mod</th><th>What it is</th></tr></thead><tbody></tbody></table></div>
-  </details>
-</details>
-
-<section class="step" id="step4">
-  <h2><span class="num">4</span>Build and download</h2>
+<section class="step" id="step3">
+  <h2><span class="num">3</span>Build and download</h2>
   <p class="hint">Generates a modified image the same size as the original. Install it with the same update procedure you use for official firmware.</p>
+  <div class="risk" role="note"><b>Unofficial, modified firmware.</b> Use it entirely at your own risk. The author accepts no responsibility for any damage, malfunction, lost settings or warranty issues that may result.</div>
   <div class="build">
     <button id="buildBtn" type="button" disabled>Build modded firmware</button>
     <span class="hint" id="buildHint" style="margin:0">Load the official firmware first.</span>
@@ -262,7 +224,14 @@ const MODS = [
    text:'Removes two built-in Tape tone shelves for a brighter tape repeat: about +3 to +5.5 dB from 1 kHz up.',
    ctl:'Always on once installed. No controls.', note:'Optional extra. The original reverse builds included it.'}
 ];
-const COLOR = k => getComputedStyle(document.documentElement).getPropertyValue('--c-'+k).trim();
+const ICON = {
+  reverse:'<circle cx="14" cy="26" r="8"/><circle cx="34" cy="26" r="8"/><circle cx="14" cy="26" r="2"/><circle cx="34" cy="26" r="2"/><path d="M14 34h20M38 10H12m5-5-5 5 5 5"/>',
+  char:'<path d="M4 24h14l2.5-5 3 11 3-13 3 14 2.5-10 3 7 2-5 2 3 2-2M43.5 18.5l1.5 1.5M44 29l1.5-1"/>',
+  digi_doppler:'<path d="M4 24Q9 4 14 24Q18 44 22 24Q25 4 28 24Q30.5 44 33 24Q35 4 37 24Q38.5 44 40 24Q41.5 4 43 24"/>',
+  tape_pickup:'<circle cx="30" cy="24" r="13"/><circle cx="30" cy="24" r="3"/><path d="M30 11v6M30 31v6M17 24h6M37 24h6M4 17h8M2 24h9M4 31h8"/>',
+  bbd_light:'<path d="M4 18h22c8 0 10 6 14 20M28 9h14m-4-4 4 4-4 4"/><path d="M4 38h40" opacity=".35"/>',
+  tape_bright:'<path d="M4 32h14c6 0 8-14 14-14h12M38 5v8M34 9h8"/><path d="M4 38h40" opacity=".35"/>'
+};
 const sel = {reverse:true, char:true, digi_doppler:true, tape_pickup:true, bbd_light:true, tape_bright:false};
 let stock = null, built = null, builtName = '', builtHash = '';
 
@@ -327,6 +296,7 @@ for (const m of MODS) {
   const el = document.createElement('div');
   el.className = 'mod'; el.style.setProperty('--mc', 'var(--pink)');
   el.innerHTML = `<input type="checkbox" data-k="${m.key}" aria-label="${m.title}"><span class="tog"></span>
+    <svg class="ico" viewBox="0 0 48 48" aria-hidden="true">${ICON[m.key]}</svg>
     <div><h3>${m.title} <span class="tag${m.extra?' extra':''}">${m.extra?'Extra · ':''}${m.tag}</span></h3>
     <p>${m.text}</p><div class="ctl">${m.ctl}</div><div class="note">${m.note}</div>
     ${m.lock ? `<div class="lockmsg">${m.lock}</div>` : ''}
@@ -372,89 +342,8 @@ async function load(f){
   render();
 }
 
-/* ---------- flash map ---------- */
-const canvas = document.getElementById('map'), ctx = canvas.getContext('2d'), tip = document.getElementById('tip');
-const NCELL = Math.ceil(D.size / CELL);
-let geo = null;
-function layout(){
-  const w = canvas.clientWidth, cols = w < 520 ? 48 : 72, rows = Math.ceil(NCELL/cols);
-  const gap = 1, cs = Math.max(3, Math.floor((w - (cols-1)*gap) / cols)), dpr = window.devicePixelRatio || 1;
-  const hgt = rows*cs + (rows-1)*gap;
-  canvas.style.height = hgt + 'px'; canvas.width = Math.round(w*dpr); canvas.height = Math.round(hgt*dpr);
-  ctx.setTransform(dpr,0,0,dpr,0,0);
-  geo = {cols, rows, cs, gap, ox: Math.floor((w - (cols*cs + (cols-1)*gap))/2)};
-}
-function cellInfo(){
-  const cells = new Array(NCELL);
-  for (let i=0;i<NCELL;i++) cells[i] = {used:null, hits:[]};
-  if (stock) for (let i=0;i<NCELL;i++){ let u=false; const s=i*CELL, e=Math.min(D.size,s+CELL); for (let j=s;j<e;j++) if (stock[j] && stock[j]!==0xff){u=true;break;} cells[i].used=u; }
-  for (const w of writes(sel)) {
-    const s = w.addr-BASE, e = s + w.data.length;
-    for (let c=Math.floor(s/CELL); c<=Math.floor((e-1)/CELL); c++) cells[c].hits.push(w);
-  }
-  return cells;
-}
-let cells = [];
-function drawMap(){
-  layout(); cells = cellInfo();
-  const {cols,cs,gap,ox} = geo, w = canvas.clientWidth;
-  ctx.clearRect(0,0,w,canvas.height);
-  const used = getComputedStyle(document.documentElement).getPropertyValue('--used').trim(), freeC = getComputedStyle(document.documentElement).getPropertyValue('--free').trim();
-  for (let i=0;i<NCELL;i++){
-    const x = ox + (i%cols)*(cs+gap), y = Math.floor(i/cols)*(cs+gap), c = cells[i];
-    ctx.fillStyle = c.used===null ? freeC : (c.used ? used : freeC);
-    if (c.used===null) ctx.globalAlpha = .55;
-    ctx.fillRect(x,y,cs,cs); ctx.globalAlpha = 1;
-    if (c.hits.length){
-      const big = c.hits.some(h => h.data.length > 16);
-      const col = COLOR(c.hits[c.hits.length-1].mod);
-      if (big) { ctx.fillStyle = col; ctx.fillRect(x,y,cs,cs); }
-      else { ctx.fillStyle = col; ctx.fillRect(x,y,cs,cs); ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--ink').trim(); ctx.lineWidth = 1; ctx.strokeRect(x+.5,y+.5,cs-1,cs-1); }
-    }
-  }
-}
-function hitTest(px,py){
-  if (!geo) return -1;
-  const {cols,cs,gap,ox} = geo, cx = Math.floor((px-ox)/(cs+gap)), cy = Math.floor(py/(cs+gap));
-  if (cx<0 || cx>=cols || cy<0) return -1; const i = cy*cols+cx; return i < NCELL ? i : -1;
-}
-const NAME = Object.fromEntries(MODS.map(m => [m.key, m.title])); NAME.core = 'Shared engine (reverse, character, doppler)';
-function showTip(e){
-  const r = canvas.getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top, i = hitTest(px,py);
-  if (i<0) { tip.style.display='none'; return; }
-  const a = BASE + i*CELL, c = cells[i];
-  let t = `0x${a.toString(16).padStart(8,'0')} – 0x${(a+CELL-1).toString(16).padStart(8,'0')}\n`;
-  t += c.used===null ? 'Load firmware to see stock contents' : (c.used ? 'Stock: code or data' : 'Stock: empty space');
-  const seen = new Set();
-  for (const h of c.hits){ const k = h.label+h.mod; if (seen.has(k)) continue; seen.add(k); t += `\n● ${NAME[h.mod]}: ${h.label} (${h.data.length} B)`; }
-  tip.textContent = t; tip.style.display = 'block';
-  const tw = tip.offsetWidth, th = tip.offsetHeight, W = canvas.parentElement.clientWidth;
-  tip.style.left = Math.min(W - tw, Math.max(0, px + 12)) + 'px';
-  tip.style.top = (py + 14 + th > canvas.clientHeight + 40 ? py - th - 10 : py + 14) + 'px';
-}
-canvas.addEventListener('pointermove', showTip);
-canvas.addEventListener('pointerdown', showTip);
-canvas.addEventListener('pointerleave', () => tip.style.display='none');
-window.addEventListener('resize', () => drawMap());
-document.getElementById('step3').addEventListener('toggle', e => { if (e.target.open) drawMap(); });
-
-/* ---------- legend, stats, table ---------- */
+/* ---------- build state ---------- */
 function render(){
-  drawMap();
-  const ws = writes(sel), present = new Set(ws.map(w => w.mod));
-  document.getElementById('legend').innerHTML =
-    `<span><i style="background:var(--used)"></i>Stock code / data</span><span><i style="background:var(--free);border:1px solid var(--line)"></i>Empty in stock</span>` +
-    ['core',...MODS.map(m=>m.key)].filter(k => present.has(k)).map(k => `<span><i style="background:var(--c-${k})"></i>${NAME[k]}</span>`).join('') +
-    `<span><i style="background:transparent;outline:1.5px solid var(--ink);outline-offset:-1.5px"></i>Outlined: small edit inside stock code</span>`;
-  const bytes = ws.reduce((s,w) => s + w.data.length, 0), stockSites = ws.filter(w => w.data.length <= 16).length, added = ws.filter(w => w.data.length > 16).reduce((s,w)=>s+w.data.length,0);
-  document.getElementById('stats').innerHTML =
-    `<div class="stat"><b>${bytes.toLocaleString()}</b><span>bytes written</span></div>` +
-    `<div class="stat"><b>${added.toLocaleString()}</b><span>bytes of added code</span></div>` +
-    `<div class="stat"><b>${stockSites}</b><span>small edits to stock code</span></div>` +
-    `<div class="stat"><b>${(bytes/D.size*100).toFixed(2)}%</b><span>of the image</span></div>`;
-  document.querySelector('#sites tbody').innerHTML = ws.slice().sort((a,b)=>a.addr-b.addr).map(w =>
-    `<tr><td class="mono">0x${w.addr.toString(16).padStart(8,'0')}</td><td class="mono">${w.data.length}</td><td><span class="dot" style="background:var(--c-${w.mod})"></span>${NAME[w.mod]}</td><td>${esc(w.label)}</td></tr>`).join('') ||
-    '<tr><td colspan="4">No mods selected.</td></tr>';
   const any = MODS.some(m => sel[m.key]);
   const bb = document.getElementById('buildBtn'), hint = document.getElementById('buildHint');
   bb.disabled = !stock || !any;
@@ -502,7 +391,6 @@ document.getElementById('themeBtn').addEventListener('click', () => {
   const dark = root.getAttribute('data-theme') ? root.getAttribute('data-theme') === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
   root.setAttribute('data-theme', dark ? 'light' : 'dark');
   try { localStorage.setItem('sealeggs-theme', root.getAttribute('data-theme')); } catch(e) {}
-  render();
 });
 
 window.__sealeggs = {apply, writes, sha256js, plan};
