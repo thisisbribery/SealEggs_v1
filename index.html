@@ -11,25 +11,26 @@
 <style>
 :root{
   --bg:#f6f4ef; --panel:#ffffff; --ink:#1d1f22; --muted:#62666d; --line:#dedad1; --soft:#efece4;
-  --accent:#0b7285; --ok:#2b8a3e; --bad:#c92a2a; --warn:#b35c00;
+  --accent:var(--pink); --ok:#2b8a3e; --bad:#c92a2a; --warn:#b35c00;
   --free:#f1eee6; --used:#c9c4b8; --map-bg:#fbfaf7;
-  --c-core:#0b7285; --c-reverse:#3b5bdb; --c-char:#e8590c; --c-tape_pickup:#2f9e44; --c-bbd_light:#d4a400; --c-tape_bright:#c2255c; --c-digi_doppler:#7048e8;
+  --c-core:var(--pink); --c-reverse:#3b5bdb; --c-char:#e8590c; --c-tape_pickup:#2f9e44; --c-bbd_light:#d4a400; --c-tape_bright:#a0522d; --c-digi_doppler:#7048e8;
+  --pink:#ff1fd6;
   --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     --bg:#121417; --panel:#1a1d21; --ink:#e9e7e2; --muted:#9aa0a8; --line:#2c3036; --soft:#22262b;
-    --accent:#3bc9db; --ok:#69db7c; --bad:#ff8787; --warn:#ffa94d;
+    --accent:var(--pink); --ok:#69db7c; --bad:#ff8787; --warn:#ffa94d;
     --free:#1f2328; --used:#3d434b; --map-bg:#16191c;
-    --c-core:#22b8cf; --c-reverse:#748ffc; --c-char:#ff922b; --c-tape_pickup:#51cf66; --c-bbd_light:#fcc419; --c-tape_bright:#f06595; --c-digi_doppler:#b197fc;
+    --c-core:var(--pink); --c-reverse:#748ffc; --c-char:#ff922b; --c-tape_pickup:#51cf66; --c-bbd_light:#fcc419; --c-tape_bright:#e0a96d; --c-digi_doppler:#b197fc;
   }
 }
 :root[data-theme="dark"]{
   --bg:#121417; --panel:#1a1d21; --ink:#e9e7e2; --muted:#9aa0a8; --line:#2c3036; --soft:#22262b;
-  --accent:#3bc9db; --ok:#69db7c; --bad:#ff8787; --warn:#ffa94d;
+  --accent:var(--pink); --ok:#69db7c; --bad:#ff8787; --warn:#ffa94d;
   --free:#1f2328; --used:#3d434b; --map-bg:#16191c;
-  --c-core:#22b8cf; --c-reverse:#748ffc; --c-char:#ff922b; --c-tape_pickup:#51cf66; --c-bbd_light:#fcc419; --c-tape_bright:#f06595; --c-digi_doppler:#b197fc;
+  --c-core:var(--pink); --c-reverse:#748ffc; --c-char:#ff922b; --c-tape_pickup:#51cf66; --c-bbd_light:#fcc419; --c-tape_bright:#e0a96d; --c-digi_doppler:#b197fc;
 }
 *{box-sizing:border-box}
 html,body{margin:0}
@@ -107,7 +108,7 @@ footer p{margin:4px 0}
 .topwarn b{font-weight:700;letter-spacing:.01em}
 .byline{display:flex;align-items:center;gap:12px;margin-bottom:18px}
 .coinlink{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);background:var(--soft);border:1px solid var(--line);border-radius:999px;padding:4px 14px 4px 4px;font-size:14px;line-height:1.25}
-.coinlink:hover{border-color:#ff1fd6}
+.coinlink:hover{border-color:var(--pink)}
 .coinlink b{font-weight:700}
 .coinlink small{display:block;white-space:nowrap;color:var(--muted);font-size:12.5px}
 .coin{display:block;width:40px;height:40px;perspective:220px;flex:0 0 auto}
@@ -127,6 +128,13 @@ footer p{margin:4px 0}
 .more dl{margin:8px 0 0;font-size:14.5px}
 .more dt{font-weight:600}
 .more dd{margin:0 0 10px}
+.fold{margin:16px 0}
+.fold>summary{list-style:none;color:inherit;font-size:inherit}
+.fold>summary::-webkit-details-marker{display:none}
+.fold>summary h2{margin:0}
+.fold[open]>summary h2{margin-bottom:4px}
+.chev{margin-left:auto;color:var(--accent);font-size:22px;line-height:1;transition:transform .15s}
+.fold[open] .chev{transform:rotate(90deg)}
 .themebtn{margin-left:auto;background:var(--soft);color:var(--ink);border:1px solid var(--line);padding:7px 11px;font-size:13px;border-radius:8px}
 @media (max-width:640px){
   h1{font-size:24px}
@@ -179,8 +187,8 @@ footer p{margin:4px 0}
   <div class="mods" id="mods"></div>
 </section>
 
-<section class="step" id="step3">
-  <h2><span class="num">3</span>See what changes</h2>
+<details class="step fold" id="step3">
+  <summary><h2><span class="num">3</span>See what changes<span class="chev" aria-hidden="true">&#9656;</span></h2></summary>
   <p class="hint">The whole flash image, one square per 256 bytes. Grey is code and data already in the firmware, pale is empty space, and colours show what your selection writes. Hover or tap a square for details.</p>
   <div class="mapwrap">
     <canvas id="map" height="300" aria-label="Firmware flash map"></canvas>
@@ -192,7 +200,7 @@ footer p{margin:4px 0}
     <summary>List every patch site</summary>
     <div class="tablewrap"><table id="sites"><thead><tr><th>Address</th><th>Bytes</th><th>Mod</th><th>What it is</th></tr></thead><tbody></tbody></table></div>
   </details>
-</section>
+</details>
 
 <section class="step" id="step4">
   <h2><span class="num">4</span>Build and download</h2>
@@ -317,7 +325,7 @@ function apply(src, s){
 const modsEl = document.getElementById('mods'), cards = {};
 for (const m of MODS) {
   const el = document.createElement('div');
-  el.className = 'mod'; el.style.setProperty('--mc', `var(--c-${m.key})`);
+  el.className = 'mod'; el.style.setProperty('--mc', 'var(--pink)');
   el.innerHTML = `<input type="checkbox" data-k="${m.key}" aria-label="${m.title}"><span class="tog"></span>
     <div><h3>${m.title} <span class="tag${m.extra?' extra':''}">${m.extra?'Extra · ':''}${m.tag}</span></h3>
     <p>${m.text}</p><div class="ctl">${m.ctl}</div><div class="note">${m.note}</div>
@@ -428,6 +436,7 @@ canvas.addEventListener('pointermove', showTip);
 canvas.addEventListener('pointerdown', showTip);
 canvas.addEventListener('pointerleave', () => tip.style.display='none');
 window.addEventListener('resize', () => drawMap());
+document.getElementById('step3').addEventListener('toggle', e => { if (e.target.open) drawMap(); });
 
 /* ---------- legend, stats, table ---------- */
 function render(){
