@@ -14,17 +14,20 @@
   --accent:var(--pink); --ok:#2b8a3e; --bad:#c92a2a; --warn:#b35c00;
   --used:#c9c4b8;
   --pink:#ff1fd6;
+  --teal:#00e0c0; --teal-glow:rgba(0,255,214,.55); --teal-ink:#00796d;
   --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
+    --teal:#19ffe0; --teal-ink:#19ffe0;
     --bg:#121417; --panel:#1a1d21; --ink:#e9e7e2; --muted:#9aa0a8; --line:#2c3036; --soft:#22262b;
     --accent:var(--pink); --ok:#69db7c; --bad:#ff8787; --warn:#ffa94d;
     --used:#3d434b;
   }
 }
 :root[data-theme="dark"]{
+  --teal:#19ffe0; --teal-ink:#19ffe0;
   --bg:#121417; --panel:#1a1d21; --ink:#e9e7e2; --muted:#9aa0a8; --line:#2c3036; --soft:#22262b;
   --accent:var(--pink); --ok:#69db7c; --bad:#ff8787; --warn:#ffa94d;
   --used:#3d434b;
@@ -85,6 +88,7 @@ button:disabled{opacity:.45;cursor:not-allowed}
 footer{color:var(--muted);font-size:13.5px;margin-top:28px}
 footer h3{color:var(--ink);font-size:14.5px;margin:18px 0 4px}
 footer p{margin:4px 0}
+footer a{color:var(--accent)}
 dialog.risk{max-width:440px;width:calc(100% - 32px);border:0;border-radius:14px;padding:0;background:var(--panel);color:var(--ink);box-shadow:0 12px 40px rgba(0,0,0,.35)}
 dialog.risk::backdrop{background:rgba(0,0,0,.55)}
 .risk-msg{background:#b3261e;color:#fff;font-size:15px;line-height:1.5;padding:18px 20px}
@@ -112,6 +116,31 @@ dialog.risk::backdrop{background:rgba(0,0,0,.55)}
 .more dl{margin:8px 0 0;font-size:14.5px}
 .more dt{font-weight:600}
 .more dd{margin:0 0 10px}
+/* Seal Beads: deliberately off the pink scheme, neon teal with a soft pulsing glow */
+.mod.sb{--mc:var(--teal);border-color:var(--teal);animation:sbglow 3s ease-in-out infinite}
+.mod.sb .ico{color:var(--teal)}
+.mod.sb:hover{border-color:var(--teal)}
+.mod.sb.on{box-shadow:inset 4px 0 0 var(--teal),0 0 14px var(--teal-glow)}
+@keyframes sbglow{0%,100%{box-shadow:0 0 4px rgba(0,255,214,.25)}50%{box-shadow:0 0 18px var(--teal-glow),0 0 2px var(--teal)}}
+.mod.sb.on{animation-name:sbglowon}
+@keyframes sbglowon{0%,100%{box-shadow:inset 4px 0 0 var(--teal),0 0 5px rgba(0,255,214,.3)}50%{box-shadow:inset 4px 0 0 var(--teal),0 0 20px var(--teal-glow),0 0 2px var(--teal)}}
+.newtag{font:700 11px var(--mono);letter-spacing:.06em;color:#04211d;background:var(--teal);border-radius:6px;padding:2px 7px;box-shadow:0 0 10px var(--teal-glow)}
+.mod.sb .tag{color:var(--teal-ink);border-color:color-mix(in srgb,var(--teal) 55%,var(--line))}
+.ctltable{width:100%;border-collapse:collapse;margin-top:8px;font-size:13.5px}
+.ctltable th,.ctltable td{text-align:left;vertical-align:top;padding:6px 8px;border-top:1px solid var(--line)}
+.ctltable th{font-weight:600;color:var(--muted);font-size:12.5px;border-top:0}
+.ctltable td:first-child{font-weight:600;white-space:nowrap}
+.tablewrap{overflow-x:auto}
+.mod>div{min-width:0}
+.mod.sb .more summary{color:var(--teal-ink)}
+@media (max-width:640px){
+  .ctltable thead{display:none}
+  .ctltable tr{display:block;border-top:1px solid var(--line);padding:6px 0}
+  .ctltable td{display:block;border:0;padding:2px 0}
+  .ctltable td:first-child{white-space:normal}
+  .ctltable td[data-l]::before{content:attr(data-l) ": ";color:var(--muted);font-weight:600}
+}
+@media (prefers-reduced-motion:reduce){.mod.sb,.mod.sb.on{animation:none}}
 .themebtn{margin-left:auto;background:var(--soft);color:var(--ink);border:1px solid var(--line);padding:7px 11px;font-size:13px;border-radius:8px}
 @media (max-width:640px){
   h1{font-size:24px}
@@ -161,7 +190,7 @@ dialog.risk::backdrop{background:rgba(0,0,0,.55)}
 
 <section class="step" id="step2">
   <h2><span class="num">2</span>Choose your mods</h2>
-  <p class="hint">Mods can be mixed freely, with one rule: Live reverse needs Digi doppler, so picking reverse turns doppler on. Reverse, character and doppler share one engine, which is added once.</p>
+  <p class="hint">Mods can be mixed freely, with two rules: Live reverse needs Digi doppler, and Seal Beads needs Live reverse, so picking one turns the other on. Reverse, character and doppler share one engine, which is added once.</p>
   <div class="mods" id="mods"></div>
 </section>
 
@@ -196,6 +225,9 @@ dialog.risk::backdrop{background:rgba(0,0,0,.55)}
   <h3>How it works</h3>
   <p>The page holds only the added code and a handful of changed constants: no part of the official firmware is included. After your file passes the version check, the patches are written into a copy in memory. The result is then checked against the expected SHA-256 for your exact mod combination.</p>
   <p>The patches were verified in an ARM Cortex-M7 emulator running the firmware's own DSP code. Reverse, character and the stability fixes were also tested on hardware. Newer combinations (reverse without character, character or doppler on their own, character with stock Digi) have so far only been verified in emulation.</p>
+  <p>Seal Beads was developed on hardware with the full reverse + character build and verified in the emulator (clock handling, controls, levels, CPU load, and Tape, BBD and Digi unchanged while it is off) for every combination it can be built with.</p>
+  <h3>Credits</h3>
+  <p>Seal Beads contains code from Mutable Instruments Beads and stmlib by Emilie Gillet, used under the MIT licence (<a href="LICENSE-beads.txt">licence text</a>). It is an independent, heavily modified derivative and isn't affiliated with or endorsed by Mutable Instruments.</p>
 </footer>
 </div>
 
@@ -206,7 +238,32 @@ dialog.risk::backdrop{background:rgba(0,0,0,.55)}
 const D = window.SEAL_EGGS;
 const BASE = 0x08000000, CELL = 256;
 const MODS = [
-  {key:'reverse', title:'Live reverse delay', tag:'Tape · BBD · Digi',
+  {key:'seal_beads', title:'Seal Beads', tag:'Granular mode in the Digi slot', isNew:true, cls:'sb',
+   text:'A granular processor inspired by Mutable Instruments Beads, living in the Digi slot. This is a <b>heavily modified Beads, not a 1-to-1 port</b>. It deliberately departs from the original to fit the Sealegs architecture and panel, and it has been tuned by ear to work for both rhythmic and melodic material: from clocked drum chops, swing and ghost hits to long, round, overlapping clouds.',
+   ctl:'With MODEL on DIGI, <b>hold FREEZE (ALT) + DELAY SYNC for about 1 s</b> to enter or leave Seal Beads. <b>TAP glows teal</b> while it is on. Moving MODEL off DIGI also leaves it.',
+   note:'Requires Live reverse. Tape, BBD and Digi are unchanged whenever Seal Beads is off. Beads code by Emilie Gillet (MIT licence).',
+   moreTitle:'Seal Beads controls', more:`<div class="tablewrap"><table class="ctltable"><thead><tr><th>Control</th><th>Free running</th><th>DELAY SYNC on (clocked)</th></tr></thead><tbody>
+<tr><td>Enter / exit</td><td colspan="2">With MODEL on DIGI, hold <b>FREEZE (ALT) + DELAY SYNC</b> for about 1 s. TAP glows teal while Seal Beads is on. The same gesture, or moving MODEL off DIGI, returns to Digi exactly as you left it.</td></tr>
+<tr><td>MOD DEPTH</td><td data-l="Free running">Density: how often grains start. Bottom = none, up to about 40 per second</td><td data-l="Clocked">Grains per pulse: off, 1/8, 1/4, 1/2, 1, 2, 3, 4, 6, 8</td></tr>
+<tr><td>WIDTH</td><td data-l="Free running">Grain size: 20 ms to 8 s</td><td data-l="Clocked">1/16 to 16 pulses</td></tr>
+<tr><td>MOD knob</td><td data-l="Free running">Overlap: each grain runs on into the next ones (up to 3 more), so grains blend while the onsets keep their timing</td><td data-l="Clocked">Same, on the grid</td></tr>
+<tr><td>COLOR</td><td data-l="Free running">Grain roundness. Top = hard square gates, noon = Beads-style bell, bottom = extra-round, very soft onsets</td><td data-l="Clocked">Same</td></tr>
+<tr><td>NOISE</td><td data-l="Free running">Scatter: even spacing to random gaps, with grains drawn from across the TIME window</td><td data-l="Clocked">Groove: up to noon, swing up to a full triplet shuffle. Past noon, late offsets and ghost hits</td></tr>
+<tr><td>TIME</td><td data-l="Free running">How far back grains read: 0 to 1, 4 or 16 s (TIME RANGE)</td><td data-l="Clocked">0 to 1, 4 or 16 pulses</td></tr>
+<tr><td>MOD RATE</td><td colspan="2">Grain pitch, two octaves either way, lingering on musical intervals</td></tr>
+<tr><td>FEEDBACK</td><td colspan="2">Feedback through the grain buffer. ALT + DELAY SYNC swaps left and right in the loop</td></tr>
+<tr><td>HPF / LPF</td><td colspan="2">Filters on the grains and their feedback. The slider ends bypass them</td></tr>
+<tr><td>FOG</td><td colspan="2">Reverb amount. ALT + FOG sets decay. The FOG/DRIVE switch places it: IN (before the grains), DLY (grains only) or MIX (everything)</td></tr>
+<tr><td>DRIVE / MIX</td><td colspan="2">Matched to the stock Sealegs drive, input trim (ALT + DRIVE), drive position and equal-power MIX</td></tr>
+<tr><td>FREEZE</td><td colspan="2">Tap: reverse grains (FREEZE lights magenta). ALT + MOD SYNC: freeze the grain buffer (blue). The Seal Eggs FREEZE swap also swaps these two</td></tr>
+<tr><td>TAP</td><td colspan="2">Tap tempo when no clock is running. Glows teal while Seal Beads is on</td></tr>
+<tr><td>DELAY SYNC</td><td colspan="2">Lock grains to CLK IN or tap tempo. The tempo is measured from the clock itself and kept if the clock stops, so grains never stall. Hold 1 s to clear the grain buffer</td></tr>
+<tr><td>MOD SYNC</td><td colspan="2">Triplet grid (1.5 times the grains per pulse) when clocked</td></tr>
+<tr><td>STEREO CONFIG</td><td colspan="2">PONG: inputs summed into the grains, wide spread. T:W: stereo with random panning. L/R: stereo, no random panning</td></tr>
+<tr><td>ALT held</td><td colspan="2">FREEZE light shows CPU load: green, yellow, orange, red. Under sustained overload, grains are thinned first and FOG is dropped before the panel can lock up</td></tr>
+<tr><td>MOD OUT, MOD lights</td><td colspan="2">Still the stock LFO</td></tr>
+</tbody></table></div>`},
+  {key:'reverse', title:'Live reverse delay', tag:'Tape · BBD · Digi', lock:'Included with Seal Beads',
    text:'Reverse playback in all three models. Recording and feedback keep running while reversed, so new audio keeps entering successive backward slices.',
    ctl:'<b>Tap FREEZE</b> to turn reverse on or off. <b>Hold FREEZE (ALT) and hold TAP for about 1 s</b> to swap the FREEZE button between reverse and the original Freeze. Each power-up starts with FREEZE set to reverse, and reverse off.',
    note:'Includes the click and overload fixes (join-search copy, sync-off fast path). New TIME settings apply at the next slice. ALT+TAP (AUX CV destination) now fires when TAP is released.'},
@@ -238,9 +295,10 @@ const ICON = {
   digi_doppler:'<path d="M4 24Q9 4 14 24Q18 44 22 24Q25 4 28 24Q30.5 44 33 24Q35 4 37 24Q38.5 44 40 24Q41.5 4 43 24"/>',
   tape_pickup:'<circle cx="30" cy="24" r="13"/><circle cx="30" cy="24" r="3"/><path d="M30 11v6M30 31v6M17 24h6M37 24h6M4 17h8M2 24h9M4 31h8"/>',
   bbd_light:'<path d="M4 18h22c8 0 10 6 14 20M28 9h14m-4-4 4 4-4 4"/><path d="M4 38h40" opacity=".35"/>',
-  tape_bright:'<path d="M4 32h14c6 0 8-14 14-14h12M38 5v8M34 9h8"/><path d="M4 38h40" opacity=".35"/>'
+  tape_bright:'<path d="M4 32h14c6 0 8-14 14-14h12M38 5v8M34 9h8"/><path d="M4 38h40" opacity=".35"/>',
+  seal_beads:'<circle cx="8" cy="30" r="3"/><circle cx="18" cy="22" r="5"/><circle cx="30" cy="27" r="4"/><circle cx="40" cy="17" r="5"/><path d="M4 40c8-6 14 2 22-3s12-6 18-1" opacity=".45"/>'
 };
-const sel = {reverse:true, char:true, digi_doppler:true, tape_pickup:true, bbd_light:true, tape_bright:false};
+const sel = {reverse:true, char:true, digi_doppler:true, tape_pickup:true, bbd_light:true, tape_bright:false, seal_beads:false};
 let stock = null, built = null, builtName = '', builtHash = '';
 
 /* ---------- SHA-256 (WebCrypto, with a small fallback for file:// in older browsers) ---------- */
@@ -283,9 +341,10 @@ function plan(s){
     if (s.digi_doppler) steps.push('digi_doppler');
   }
   for (const k of ['tape_pickup','bbd_light','tape_bright']) if (s[k]) steps.push(k);
+  if (s.seal_beads) steps.push('seal_beads');          // last: also sets the RAM zero-init extent
   return steps;
 }
-const OWNER = {core:'core', digi_doppler:'digi_doppler', char_save:'char', no_char_gesture:'reverse', native_freeze_only:'char', tape_pickup:'tape_pickup', bbd_light:'bbd_light', tape_bright:'tape_bright'};
+const OWNER = {core:'core', digi_doppler:'digi_doppler', char_save:'char', no_char_gesture:'reverse', native_freeze_only:'char', tape_pickup:'tape_pickup', bbd_light:'bbd_light', tape_bright:'tape_bright', seal_beads:'seal_beads'};
 function writes(s){
   const out = [];
   for (const step of plan(s)) for (const p of P[step]) out.push({...p, mod:OWNER[step], step});
@@ -302,23 +361,24 @@ function apply(src, s){
 const modsEl = document.getElementById('mods'), cards = {};
 for (const m of MODS) {
   const el = document.createElement('div');
-  el.className = 'mod'; el.style.setProperty('--mc', 'var(--pink)');
+  el.className = 'mod' + (m.cls ? ' ' + m.cls : ''); if (!m.cls) el.style.setProperty('--mc', 'var(--pink)');
   el.innerHTML = `<input type="checkbox" data-k="${m.key}" aria-label="${m.title}"><span class="tog"></span>
     <svg class="ico" viewBox="0 0 48 48" aria-hidden="true">${ICON[m.key]}</svg>
-    <div><h3>${m.title} <span class="tag${m.extra?' extra':''}">${m.extra?'Extra · ':''}${m.tag}</span></h3>
+    <div><h3>${m.title} ${m.isNew ? '<span class="newtag">NEW</span>' : ''}<span class="tag${m.extra?' extra':''}">${m.extra?'Extra · ':''}${m.tag}</span></h3>
     <p>${m.text}</p><div class="ctl">${m.ctl}</div><div class="note">${m.note}</div>
     ${m.lock ? `<div class="lockmsg">${m.lock}</div>` : ''}
-    ${m.more ? `<details class="more"><summary>About the three characters</summary>${m.more}</details>` : ''}</div>`;
+    ${m.more ? `<details class="more"><summary>${m.moreTitle || 'About the three characters'}</summary>${m.more}</details>` : ''}</div>`;
   const cb = el.querySelector('input'); cb.checked = sel[m.key];
   el.addEventListener('click', e => { if (e.target.closest('details') || e.target === cb || cb.disabled) return; cb.checked = !cb.checked; cb.dispatchEvent(new Event('change')); });
   cb.addEventListener('change', () => { sel[m.key] = cb.checked; syncMods(); invalidate(); render(); });
   modsEl.appendChild(el); cards[m.key] = {el, cb};
 }
 function syncMods(){
+  if (sel.seal_beads) sel.reverse = true;              // Seal Beads is built on the reverse engine
   if (sel.reverse) sel.digi_doppler = true;            // Digi reverse is built on the doppler engine
   for (const [k, {el, cb}] of Object.entries(cards)) {
     cb.checked = !!sel[k]; el.classList.toggle('on', cb.checked);
-    const locked = k === 'digi_doppler' && sel.reverse;
+    const locked = (k === 'digi_doppler' && sel.reverse) || (k === 'reverse' && sel.seal_beads);
     el.classList.toggle('locked', locked); cb.disabled = locked;
   }
 }
@@ -361,7 +421,7 @@ function invalidate(){ built = null; document.getElementById('result').classList
 
 /* ---------- build ---------- */
 function tagName(s){
-  const t = {reverse:'reverse', char:'character', digi_doppler:'digi-doppler', tape_pickup:'tape-pickup', bbd_light:'bbd-light', tape_bright:'tape-bright'};
+  const t = {reverse:'reverse', char:'character', digi_doppler:'digi-doppler', tape_pickup:'tape-pickup', bbd_light:'bbd-light', tape_bright:'tape-bright', seal_beads:'seal-beads'};
   return 'Sealegs.1.3.5.0.sealeggs.' + D.keys.filter(k => s[k]).map(k => t[k]).join('+') + '.bin';
 }
 const riskDlg = document.getElementById('riskDlg');
@@ -379,6 +439,7 @@ async function build(){
   built = b; builtName = tagName(sel); builtHash = h;
   rs.className = 'status show ok';
   rs.innerHTML = `<b>&#10003; Built and verified.</b> Matches the reference build for this combination.<div class="fname" style="margin-top:6px">${builtName}</div><div class="kv">SHA-256 ${h}</div>` +
+    (sel.seal_beads ? `<div class="warnbox">Seal Beads: with MODEL on DIGI, hold FREEZE (ALT) + DELAY SYNC for about 1 s to enter it. TAP glows teal while it is on.</div>` : '') +
     (sel.digi_doppler ? `<div class="warnbox">Digi doppler adds about 1 ms (one audio block) to Digi’s delay time. Everything else is identical to stock whenever reverse and character are switched off.</div>` : '');
   document.getElementById('dlBtn').disabled = false; document.getElementById('notesBtn').disabled = false;
 }
