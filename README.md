@@ -46,7 +46,7 @@ Seal Beads is a **heavily modified Beads**. Don't think of it as a 1-to-1 port o
 | FOG | Reverb amount; ALT + FOG sets decay. The FOG/DRIVE switch places it: IN (before the grains), DLY (grains only) or MIX (everything) | Same |
 | DRIVE / MIX | Matched to the stock Sealegs drive, input trim (ALT + DRIVE), drive position and equal-power MIX | Same |
 | FREEZE | Tap: reverse grains (FREEZE lights magenta). ALT + MOD SYNC: freeze the grain buffer (blue). The Seal Eggs FREEZE swap also swaps these two | Same |
-| TAP | Tap tempo when no clock is running. Glows teal while Seal Beads is on | |
+| TAP | Tap tempo when no clock is running. Breathes teal while Seal Beads is on; hold ALT to see the usual AUX CV destination blink | |
 | DELAY SYNC | | Locks grains to CLK IN or tap tempo. The tempo is measured from the clock itself and kept if the clock stops, so grains never stall. Hold 1 s to clear the grain buffer |
 | MOD SYNC | | Triplet grid (1.5 times the grains per pulse) |
 | STEREO CONFIG | PONG: inputs summed into the grains, wide spread. T:W: stereo with random panning. L/R: stereo, no random panning | Same |
@@ -65,7 +65,7 @@ Seal Beads contains code from Mutable Instruments Beads and stmlib by Emilie Gil
 
 - Digi doppler adds about 1 ms (one audio block) to Digi's delay time. Without doppler, Digi is bit-identical to stock whenever reverse and character are off; Tape and BBD always are.
 - With reverse installed, the short ALT+TAP (AUX CV destination) action fires when TAP is released, not when it is pressed.
-- Seal Beads adds a CPU load meter that runs in every model (it only measures; audio is unchanged). Inside Seal Beads, the TAP light shows the teal glow instead of the tempo blink.
+- Seal Beads adds a CPU load meter that runs in every model (it only measures; audio is unchanged). Inside Seal Beads, the TAP light breathes teal instead of its usual colour (holding ALT still shows the AUX CV destination blink).
 
 ## Verification
 
