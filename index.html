@@ -15,12 +15,14 @@
   --used:#c9c4b8;
   --pink:#ff1fd6;
   --teal:#00e0c0; --teal-glow:rgba(0,255,214,.55); --teal-ink:#00796d;
+  --orange:#ff8a1f; --orange-glow:rgba(255,138,31,.55); --orange-ink:#b04f00;
   --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     --teal:#19ffe0; --teal-ink:#19ffe0;
+    --orange:#ff9a3c; --orange-ink:#ffab5c;
     --bg:#121417; --panel:#1a1d21; --ink:#e9e7e2; --muted:#9aa0a8; --line:#2c3036; --soft:#22262b;
     --accent:var(--pink); --ok:#69db7c; --bad:#ff8787; --warn:#ffa94d;
     --used:#3d434b;
@@ -28,6 +30,7 @@
 }
 :root[data-theme="dark"]{
   --teal:#19ffe0; --teal-ink:#19ffe0;
+  --orange:#ff9a3c; --orange-ink:#ffab5c;
   --bg:#121417; --panel:#1a1d21; --ink:#e9e7e2; --muted:#9aa0a8; --line:#2c3036; --soft:#22262b;
   --accent:var(--pink); --ok:#69db7c; --bad:#ff8787; --warn:#ffa94d;
   --used:#3d434b;
@@ -126,6 +129,18 @@ dialog.risk::backdrop{background:rgba(0,0,0,.55)}
 @keyframes sbglowon{0%,100%{box-shadow:inset 4px 0 0 var(--teal),0 0 5px rgba(0,255,214,.3)}50%{box-shadow:inset 4px 0 0 var(--teal),0 0 20px var(--teal-glow),0 0 2px var(--teal)}}
 .newtag{font:700 11px var(--mono);letter-spacing:.06em;color:#04211d;background:var(--teal);border-radius:6px;padding:2px 7px;box-shadow:0 0 10px var(--teal-glow)}
 .mod.sb .tag{color:var(--teal-ink);border-color:color-mix(in srgb,var(--teal) 55%,var(--line))}
+/* Seal Microloops: orange, the colour TAP breathes while it is on */
+.mod.sm{--mc:var(--orange);border-color:var(--orange);animation:smglow 3s ease-in-out infinite}
+.mod.sm .ico{color:var(--orange)}
+.mod.sm:hover{border-color:var(--orange)}
+@keyframes smglow{0%,100%{box-shadow:0 0 4px rgba(255,138,31,.25)}50%{box-shadow:0 0 18px var(--orange-glow),0 0 2px var(--orange)}}
+.mod.sm.on{animation-name:smglowon}
+@keyframes smglowon{0%,100%{box-shadow:inset 4px 0 0 var(--orange),0 0 5px rgba(255,138,31,.3)}50%{box-shadow:inset 4px 0 0 var(--orange),0 0 20px var(--orange-glow),0 0 2px var(--orange)}}
+.mod.sm .newtag{color:#2a1300;background:var(--orange);box-shadow:0 0 10px var(--orange-glow)}
+.mod.sm .tag{color:var(--orange-ink);border-color:color-mix(in srgb,var(--orange) 55%,var(--line))}
+.mod.sm .more summary{color:var(--orange-ink)}
+.more h4{margin:14px 0 4px;font-size:14px}
+.more .lead{margin:6px 0 0;font-size:14px;color:var(--muted)}
 .ctltable{width:100%;border-collapse:collapse;margin-top:8px;font-size:13.5px}
 .ctltable th,.ctltable td{text-align:left;vertical-align:top;padding:6px 8px;border-top:1px solid var(--line)}
 .ctltable th{font-weight:600;color:var(--muted);font-size:12.5px;border-top:0}
@@ -140,7 +155,7 @@ dialog.risk::backdrop{background:rgba(0,0,0,.55)}
   .ctltable td:first-child{white-space:normal}
   .ctltable td[data-l]::before{content:attr(data-l) ": ";color:var(--muted);font-weight:600}
 }
-@media (prefers-reduced-motion:reduce){.mod.sb,.mod.sb.on{animation:none}}
+@media (prefers-reduced-motion:reduce){.mod.sb,.mod.sb.on,.mod.sm,.mod.sm.on{animation:none}}
 .themebtn{margin-left:auto;background:var(--soft);color:var(--ink);border:1px solid var(--line);padding:7px 11px;font-size:13px;border-radius:8px}
 @media (max-width:640px){
   h1{font-size:24px}
@@ -190,7 +205,7 @@ dialog.risk::backdrop{background:rgba(0,0,0,.55)}
 
 <section class="step" id="step2">
   <h2><span class="num">2</span>Choose your mods</h2>
-  <p class="hint">Mods can be mixed freely, with two rules: Live reverse needs Digi doppler, and Seal Beads needs Live reverse, so picking one turns the other on. Reverse, character and doppler share one engine, which is added once.</p>
+  <p class="hint">Mods can be mixed freely, with three rules: Live reverse needs Digi doppler, Seal Beads needs Live reverse, and Seal Microloops needs Seal Beads, so picking one turns the others on. Reverse, character and doppler share one engine, which is added once.</p>
   <div class="mods" id="mods"></div>
 </section>
 
@@ -226,8 +241,10 @@ dialog.risk::backdrop{background:rgba(0,0,0,.55)}
   <p>The page holds only the added code and a handful of changed constants: no part of the official firmware is included. After your file passes the version check, the patches are written into a copy in memory. The result is then checked against the expected SHA-256 for your exact mod combination.</p>
   <p>The patches were verified in an ARM Cortex-M7 emulator running the firmware's own DSP code. Reverse, character and the stability fixes were also tested on hardware. Newer combinations (reverse without character, character or doppler on their own, character with stock Digi) have so far only been verified in emulation.</p>
   <p>Seal Beads was developed on hardware with the full reverse + character build and verified in the emulator (clock handling, controls, levels, CPU load, and Tape, BBD and Digi unchanged while it is off) for every combination it can be built with.</p>
+  <p>Seal Microloops was developed on hardware with the full build plus Seal Beads. Its latest version (a fix for Shuffle stalling while TIME or WIDTH moved) has been verified in the emulator: the three modes and their variations, levels, CPU load, a stress test of fast control moves, Seal Beads unchanged, and Tape, BBD and Digi unchanged while it is off, for every combination it can be built with.</p>
   <h3>Credits</h3>
   <p>Seal Beads contains code from Mutable Instruments Beads and stmlib by Emilie Gillet, used under the MIT licence (<a href="LICENSE-beads.txt">licence text</a>). It is an independent, heavily modified derivative and isn't affiliated with or endorsed by Mutable Instruments.</p>
+  <p>Seal Microloops is original code, an homage to a style of effect. It contains no code or data from any commercial product and isn't affiliated with or endorsed by any pedal maker.</p>
 </footer>
 </div>
 
@@ -238,7 +255,46 @@ dialog.risk::backdrop{background:rgba(0,0,0,.55)}
 const D = window.SEAL_EGGS;
 const BASE = 0x08000000, CELL = 256;
 const MODS = [
-  {key:'seal_beads', title:'Seal Beads', tag:'Granular mode in the Digi slot', isNew:true, cls:'sb',
+  {key:'seal_micro', title:'Seal Microloops', tag:'Micro-loop mode behind BBD', isNew:true, cls:'sm',
+   text:'A micro-looper hiding behind BBD. A few short loops of what you just played repeat, change speed, get rearranged into new rhythms or hold into drones, so you still hear your playing, rebuilt into intervals and patterns. It runs in the same shell as Seal Beads, so DRIVE, MIX, FOG, FEEDBACK, the filters, stereo and the clock behave the same. Three modes, four variations each.',
+   ctl:'With MODEL on BBD, <b>hold FREEZE (ALT) + DELAY SYNC for about 1 s</b> to enter or leave Seal Microloops. <b>TAP glows orange</b> while it is on. Moving MODEL off BBD also leaves it.',
+   note:'Requires Seal Beads (they share one engine shell). Tape, BBD and Digi are unchanged whenever it is off. Original code: an homage to boutique micro-loop pedals, not a port of any of them.',
+   moreTitle:'Seal Microloops modes and controls', more:`<p class="lead">TIME RANGE picks the mode. MOD RATE picks one of four variations (four zones, bottom to top). MOD DEPTH sets how much each variation does.</p>
+<h4>The three modes</h4>
+<div class="tablewrap"><table class="ctltable"><thead><tr><th>Mode</th><th>What it does</th></tr></thead><tbody>
+<tr><td>Octaves<br><small>TIME RANGE LONG</small></td><td data-l="What it does">Up to four loops of different lengths (1&times;, 2&times;, &frac12;&times; and 1.5&times; TIME), each at an octave speed. The lengths never line up, so the loops drift against each other instead of locking into a bar. MOD DEPTH brings in loops 2 to 4.</td></tr>
+<tr><td>Shuffle<br><small>TIME RANGE MED</small></td><td data-l="What it does">The last few seconds are cut into slices and replayed as a shuffled 8-step pattern. Best on drums with DELAY SYNC on, so the steps land on the clock. WIDTH sets how many times a pattern plays before it takes fresh audio and reshuffles.</td></tr>
+<tr><td>Drone<br><small>TIME RANGE SHORT</small></td><td data-l="What it does">Two loops repeat a short sample until it sustains. Short TIME turns it into a tone, long TIME keeps it a smeared phrase. Stop playing and the drone rings on, fading over a time set by WIDTH (never at the top). Play again and it takes the new sound. New samples are only taken near the peaks of your playing, never from a gap between hits.</td></tr>
+</tbody></table></div>
+<h4>The four variations (MOD RATE)</h4>
+<div class="tablewrap"><table class="ctltable"><thead><tr><th>Mode</th><th>A</th><th>B</th><th>C</th><th>D</th></tr></thead><tbody>
+<tr><td>Octaves</td><td data-l="A">Normal + an octave up</td><td data-l="B">Normal + an octave down</td><td data-l="C">Everything an octave up</td><td data-l="D">An octave down to two octaves up (&frac12;, 1, 2, 4&times;)</td></tr>
+<tr><td>Shuffle</td><td data-l="A">A random low-pass per step. MOD DEPTH: how deep</td><td data-l="B">Some steps drop to half speed, an octave down. MOD DEPTH: how many. At the very top a soft pad joins underneath</td><td data-l="C">Up to three overlapping layers, each step a resonant filter sweep. MOD DEPTH brings in the layers</td><td data-l="D">A double-time layer, then near the top a bit-crushed sub-octave layer. MOD DEPTH: layers and crush</td></tr>
+<tr><td>Drone</td><td data-l="A">The loop length breathes, down to a quarter and back over 10 s (16 pulses when clocked). Changes the rhythm and buzz, not the pitch</td><td data-l="B">A sub-octave drone under a resonant low-pass sweeping from 8 kHz down to 125 Hz and back over 16 s (32 pulses)</td><td data-l="C">Each sample rings through a resonant band (300 Hz to 2.4 kHz), a new band with every new sample. MOD DEPTH: plain drone to singing bands</td><td data-l="D">The loop length follows your playing: hit harder and it tightens, play softly and it opens back out</td></tr>
+</tbody></table></div>
+<h4>Controls</h4>
+<div class="tablewrap"><table class="ctltable"><thead><tr><th>Control</th><th>Seal Microloops</th></tr></thead><tbody>
+<tr><td>Enter / exit</td><td data-l="Seal Microloops">With MODEL on BBD, hold <b>FREEZE (ALT) + DELAY SYNC</b> for about 1 s. TAP glows orange while it is on. The same gesture, or moving MODEL off BBD, returns to BBD exactly as you left it. (The same gesture on DIGI is Seal Beads.)</td></tr>
+<tr><td>TIME RANGE</td><td data-l="Seal Microloops">Mode: LONG = Octaves, MED = Shuffle, SHORT = Drone</td></tr>
+<tr><td>MOD RATE</td><td data-l="Seal Microloops">Variation A, B, C or D (four zones, bottom to top)</td></tr>
+<tr><td>MOD DEPTH</td><td data-l="Seal Microloops">Activity: how much the variation does (loops, layers, filter depth, crush, breathing, sweep)</td></tr>
+<tr><td>TIME</td><td data-l="Seal Microloops">Loop or step length: 25 ms to 2 s. With DELAY SYNC on: 1/16 to 2 pulses</td></tr>
+<tr><td>WIDTH</td><td data-l="Seal Microloops">Repeats: how many times a loop plays before it grabs fresh audio (1 to 64). Low follows your playing closely, high holds on to a moment. In Drone it also sets how long the drone rings on after you stop: about 0.4 s at the bottom to 20 s, forever at the very top</td></tr>
+<tr><td>COLOR</td><td data-l="Seal Microloops">Shape of each loop: top = hard edges (stutter), noon = a bell, bottom = extra round</td></tr>
+<tr><td>MOD knob</td><td data-l="Seal Microloops">Overlap: how much each pass crossfades into the next. 0 = hard restarts (choppy, or a buzzing drone), full = seamless</td></tr>
+<tr><td>NOISE</td><td data-l="Seal Microloops">Scatter: loops grab audio from further back at random. In Shuffle it adds rests, doubled steps and reversed steps instead</td></tr>
+<tr><td>FREEZE</td><td data-l="Seal Microloops">Tap: loops play reversed. ALT + MOD SYNC: hold, which stops recording so the loops keep cycling what you held while you play over it</td></tr>
+<tr><td>FEEDBACK</td><td data-l="Seal Microloops">The loops are recorded back in, so Octaves climbs in cascades. ALT + DELAY SYNC swaps left and right in the loop</td></tr>
+<tr><td>HPF / LPF</td><td data-l="Seal Microloops">Filters on the loops and their feedback. The slider ends bypass them</td></tr>
+<tr><td>FOG</td><td data-l="Seal Microloops">Reverb, as in Seal Beads. ALT + FOG sets decay. IN smears the audio before it is looped, DLY puts it on the loops only, MIX on everything</td></tr>
+<tr><td>DRIVE / MIX</td><td data-l="Seal Microloops">Matched to the stock Sealegs drive, input trim, drive position and equal-power MIX</td></tr>
+<tr><td>DELAY SYNC</td><td data-l="Seal Microloops">Lock loop lengths, Shuffle steps and the Drone breathing and sweep to CLK IN or tap tempo. Hold 1 s to clear the loop memory</td></tr>
+<tr><td>MOD SYNC</td><td data-l="Seal Microloops">Triplets: lengths and steps &times; 2/3</td></tr>
+<tr><td>TAP</td><td data-l="Seal Microloops">Tap tempo when no clock is running. Breathes orange while Seal Microloops is on</td></tr>
+<tr><td>STEREO CONFIG</td><td data-l="Seal Microloops">PONG and T:W spread the loops across the stereo field. L/R keeps them in place</td></tr>
+<tr><td>ALT held</td><td data-l="Seal Microloops">FREEZE light shows CPU load: green, yellow, orange, red. Under sustained overload, loops are thinned first</td></tr>
+</tbody></table></div>`},
+  {key:'seal_beads', title:'Seal Beads', tag:'Granular mode in the Digi slot', isNew:true, cls:'sb', lock:'Included with Seal Microloops',
    text:'A granular processor inspired by Mutable Instruments Beads, living in the Digi slot. This is a <b>heavily modified Beads, not a 1-to-1 port</b>. It deliberately departs from the original to fit the Sealegs architecture and panel, and it has been tuned by ear to work for both rhythmic and melodic material: from clocked drum chops, swing and ghost hits to long, round, overlapping clouds.',
    ctl:'With MODEL on DIGI, <b>hold FREEZE (ALT) + DELAY SYNC for about 1 s</b> to enter or leave Seal Beads. <b>TAP glows teal</b> while it is on. Moving MODEL off DIGI also leaves it.',
    note:'Requires Live reverse. Tape, BBD and Digi are unchanged whenever Seal Beads is off. Beads code by Emilie Gillet (MIT licence).',
@@ -296,9 +352,10 @@ const ICON = {
   tape_pickup:'<circle cx="30" cy="24" r="13"/><circle cx="30" cy="24" r="3"/><path d="M30 11v6M30 31v6M17 24h6M37 24h6M4 17h8M2 24h9M4 31h8"/>',
   bbd_light:'<path d="M4 18h22c8 0 10 6 14 20M28 9h14m-4-4 4 4-4 4"/><path d="M4 38h40" opacity=".35"/>',
   tape_bright:'<path d="M4 32h14c6 0 8-14 14-14h12M38 5v8M34 9h8"/><path d="M4 38h40" opacity=".35"/>',
+  seal_micro:'<circle cx="11" cy="29" r="6"/><circle cx="25" cy="23" r="9"/><circle cx="39" cy="29" r="5"/><path d="M25 14l4-3M25 14l4 3"/><path d="M4 41h40" opacity=".45"/>',
   seal_beads:'<circle cx="8" cy="30" r="3"/><circle cx="18" cy="22" r="5"/><circle cx="30" cy="27" r="4"/><circle cx="40" cy="17" r="5"/><path d="M4 40c8-6 14 2 22-3s12-6 18-1" opacity=".45"/>'
 };
-const sel = {reverse:true, char:true, digi_doppler:true, tape_pickup:true, bbd_light:true, tape_bright:false, seal_beads:false};
+const sel = {reverse:true, char:true, digi_doppler:true, tape_pickup:true, bbd_light:true, tape_bright:false, seal_beads:false, seal_micro:false};
 let stock = null, built = null, builtName = '', builtHash = '';
 
 /* ---------- SHA-256 (WebCrypto, with a small fallback for file:// in older browsers) ---------- */
@@ -341,10 +398,11 @@ function plan(s){
     if (s.digi_doppler) steps.push('digi_doppler');
   }
   for (const k of ['tape_pickup','bbd_light','tape_bright']) if (s[k]) steps.push(k);
-  if (s.seal_beads) steps.push('seal_beads');          // last: also sets the RAM zero-init extent
+  if (s.seal_beads) steps.push('seal_beads');          // also sets the RAM zero-init extent
+  if (s.seal_micro) steps.push('seal_micro');          // last: builds on the Seal Beads shell
   return steps;
 }
-const OWNER = {core:'core', digi_doppler:'digi_doppler', char_save:'char', no_char_gesture:'reverse', native_freeze_only:'char', tape_pickup:'tape_pickup', bbd_light:'bbd_light', tape_bright:'tape_bright', seal_beads:'seal_beads'};
+const OWNER = {core:'core', digi_doppler:'digi_doppler', char_save:'char', no_char_gesture:'reverse', native_freeze_only:'char', tape_pickup:'tape_pickup', bbd_light:'bbd_light', tape_bright:'tape_bright', seal_beads:'seal_beads', seal_micro:'seal_micro'};
 function writes(s){
   const out = [];
   for (const step of plan(s)) for (const p of P[step]) out.push({...p, mod:OWNER[step], step});
@@ -374,11 +432,12 @@ for (const m of MODS) {
   modsEl.appendChild(el); cards[m.key] = {el, cb};
 }
 function syncMods(){
+  if (sel.seal_micro) sel.seal_beads = true;          // Seal Microloops shares the Seal Beads shell
   if (sel.seal_beads) sel.reverse = true;              // Seal Beads is built on the reverse engine
   if (sel.reverse) sel.digi_doppler = true;            // Digi reverse is built on the doppler engine
   for (const [k, {el, cb}] of Object.entries(cards)) {
     cb.checked = !!sel[k]; el.classList.toggle('on', cb.checked);
-    const locked = (k === 'digi_doppler' && sel.reverse) || (k === 'reverse' && sel.seal_beads);
+    const locked = (k === 'digi_doppler' && sel.reverse) || (k === 'reverse' && sel.seal_beads) || (k === 'seal_beads' && sel.seal_micro);
     el.classList.toggle('locked', locked); cb.disabled = locked;
   }
 }
@@ -421,7 +480,7 @@ function invalidate(){ built = null; document.getElementById('result').classList
 
 /* ---------- build ---------- */
 function tagName(s){
-  const t = {reverse:'reverse', char:'character', digi_doppler:'digi-doppler', tape_pickup:'tape-pickup', bbd_light:'bbd-light', tape_bright:'tape-bright', seal_beads:'seal-beads'};
+  const t = {reverse:'reverse', char:'character', digi_doppler:'digi-doppler', tape_pickup:'tape-pickup', bbd_light:'bbd-light', tape_bright:'tape-bright', seal_beads:'seal-beads', seal_micro:'seal-microloops'};
   return 'Sealegs.1.3.5.0.sealeggs.' + D.keys.filter(k => s[k]).map(k => t[k]).join('+') + '.bin';
 }
 const riskDlg = document.getElementById('riskDlg');
@@ -439,6 +498,7 @@ async function build(){
   built = b; builtName = tagName(sel); builtHash = h;
   rs.className = 'status show ok';
   rs.innerHTML = `<b>&#10003; Built and verified.</b> Matches the reference build for this combination.<div class="fname" style="margin-top:6px">${builtName}</div><div class="kv">SHA-256 ${h}</div>` +
+    (sel.seal_micro ? `<div class="warnbox">Seal Microloops: with MODEL on BBD, hold FREEZE (ALT) + DELAY SYNC for about 1 s to enter it. TAP glows orange while it is on.</div>` : '') +
     (sel.seal_beads ? `<div class="warnbox">Seal Beads: with MODEL on DIGI, hold FREEZE (ALT) + DELAY SYNC for about 1 s to enter it. TAP glows teal while it is on.</div>` : '') +
     (sel.digi_doppler ? `<div class="warnbox">Digi doppler adds about 1 ms (one audio block) to Digi’s delay time. Everything else is identical to stock whenever reverse and character are switched off.</div>` : '');
   document.getElementById('dlBtn').disabled = false; document.getElementById('notesBtn').disabled = false;
