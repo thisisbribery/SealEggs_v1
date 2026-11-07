@@ -70,8 +70,11 @@ Seal Microloops is original code. It contains no code or data from any commercia
 ## Seal Beads
 
 Seal Beads is a **heavily modified Beads**. Don't think of it as a 1-to-1 port of the Mutable Instruments module.
+
+**Latest update:** a softer COLOR (shape) with a new buttery end, smoother Overlap, and Scatter is now Spray.
+
 - **Built for the Sealegs:** it deliberately departs from the original to fit the Sealegs architecture, panel and CPU budget.
-- **Tuned by ear:** it was tuned to work for both rhythmic and melodic material, from clocked drum chops with swing and ghost hits to long, round, overlapping clouds.
+- **Tuned by ear:** it was tuned to work for both rhythmic and melodic material, from clocked drum chops and reshuffled slices to long, buttery, overlapping clouds.
 - **Digi only while it runs:** it replaces Digi only while you're in it. Tape, BBD and Digi are unchanged whenever it's off.
 
 | Control | Free running | DELAY SYNC on (clocked) |
@@ -79,10 +82,10 @@ Seal Beads is a **heavily modified Beads**. Don't think of it as a 1-to-1 port o
 | Enter / exit | With MODEL on DIGI, hold FREEZE (ALT) + DELAY SYNC for about 1 s. TAP glows teal while Seal Beads is on. The same gesture, or moving MODEL off DIGI, returns to Digi as you left it. | |
 | MOD DEPTH | Density: how often grains start. Bottom = none, up to about 40 per second | Grains per pulse: off, 1/8, 1/4, 1/2, 1, 2, 3, 4, 6, 8 |
 | WIDTH | Grain size: 20 ms to 8 s | 1/16 to 16 pulses |
-| MOD knob | Overlap: each grain runs on into the next ones (up to 3 more), so grains blend while the onsets keep their timing | Same, on the grid |
-| COLOR | Grain roundness. Top = hard square gates, noon = Beads-style bell, bottom = extra-round, very soft onsets | Same |
-| NOISE | Scatter: even spacing to random gaps, with grains drawn from across the TIME window | Groove: up to noon, swing up to a full triplet shuffle; past noon, late offsets and ghost hits |
-| TIME | How far back grains read: 0 to 1, 4 or 16 s (TIME RANGE) | 0 to 1, 4 or 16 pulses |
+| MOD knob | Overlap: each grain runs on into the next ones (up to 3 more), so grains blend smoothly while the onsets keep their timing | Same, on the grid |
+| COLOR | Grain shape. Top = hard square gates, noon = Beads-style bell, a quarter up = very round, bottom = buttery: soft-edged grains that melt into one smooth cloud | Same |
+| NOISE | Spray: each grain starts from a random spot around TIME, reaching the whole TIME RANGE at full, and grain starts wobble in time without leaving gaps. Grains stay centred in the stereo field | Spray on the grid: grains read from other slices, and the timing stays locked to the clock |
+| TIME | How far back grains read: 0 to 1, 4 or 16 s (TIME RANGE). Squared, so the lower half covers the first quarter | 0 to 1, 4 or 16 pulses |
 | MOD RATE | Grain pitch, two octaves either way, lingering on musical intervals | Same |
 | FEEDBACK | Feedback through the grain buffer. ALT + DELAY SYNC swaps left and right in the loop | Same |
 | HPF / LPF | Filters on the grains and their feedback. The slider ends bypass them | Same |
