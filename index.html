@@ -258,7 +258,7 @@ const MODS = [
   {key:'seal_micro', title:'Seal Microloops', tag:'Micro-loop mode behind BBD', isNew:true, cls:'sm',
    text:'A micro-looper hiding behind BBD. A few short loops of what you just played repeat, change speed, get rearranged into new rhythms or hold into drones, so you still hear your playing, rebuilt into intervals and patterns. It runs in the same shell as Seal Beads, so DRIVE, MIX, FOG, FEEDBACK, the filters, stereo and the clock behave the same. Three modes, four variations each.',
    ctl:'With MODEL on BBD, <b>hold FREEZE (ALT) + DELAY SYNC for about 1 s</b> to enter or leave Seal Microloops. <b>TAP glows orange</b> while it is on. Moving MODEL off BBD also leaves it.',
-   note:'Requires Seal Beads (they share one engine shell). Tape, BBD and Digi are unchanged whenever it is off. Original code: an homage to boutique micro-loop pedals, not a port of any of them.',
+   note:'Requires Seal Beads (they share one engine shell). <b>With DELAY SYNC on, Shuffle and Drone make no sound until a clock is present.</b> Tape, BBD and Digi are unchanged whenever it is off. Original code: an homage to boutique micro-loop pedals, not a port of any of them.',
    moreTitle:'Seal Microloops modes and controls', more:`<p class="lead">TIME RANGE picks the mode. MOD RATE picks one of four variations (four zones, bottom to top). MOD DEPTH sets how much each variation does.</p>
 <h4>The three modes</h4>
 <div class="tablewrap"><table class="ctltable"><thead><tr><th>Mode</th><th>What it does</th></tr></thead><tbody>
@@ -288,7 +288,7 @@ const MODS = [
 <tr><td>HPF / LPF</td><td data-l="Seal Microloops">Filters on the loops and their feedback. The slider ends bypass them</td></tr>
 <tr><td>FOG</td><td data-l="Seal Microloops">Reverb, as in Seal Beads. ALT + FOG sets decay. IN smears the audio before it is looped, DLY puts it on the loops only, MIX on everything</td></tr>
 <tr><td>DRIVE / MIX</td><td data-l="Seal Microloops">Matched to the stock Sealegs drive, input trim, drive position and equal-power MIX</td></tr>
-<tr><td>DELAY SYNC</td><td data-l="Seal Microloops">Lock loop lengths, Shuffle steps and the Drone breathing and sweep to CLK IN or tap tempo. Hold 1 s to clear the loop memory</td></tr>
+<tr><td>DELAY SYNC</td><td data-l="Seal Microloops">Lock loop lengths, Shuffle steps and the Drone breathing and sweep to CLK IN or tap tempo. Hold 1 s to clear the loop memory. Shuffle and Drone stay silent while DELAY SYNC is on until a clock is present</td></tr>
 <tr><td>MOD SYNC</td><td data-l="Seal Microloops">Triplets: lengths and steps &times; 2/3</td></tr>
 <tr><td>TAP</td><td data-l="Seal Microloops">Tap tempo when no clock is running. Breathes orange while Seal Microloops is on</td></tr>
 <tr><td>STEREO CONFIG</td><td data-l="Seal Microloops">PONG and T:W spread the loops across the stereo field. L/R keeps them in place</td></tr>

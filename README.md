@@ -29,6 +29,8 @@ Mods can be mixed freely, with three rules: Live reverse needs Digi doppler (Dig
 
 Seal Microloops is a micro-looper hiding behind BBD. A few short loops of what you just played repeat, change speed, get rearranged into new rhythms or hold into drones, so you still hear your playing, rebuilt into intervals and patterns. It runs in the same shell as Seal Beads, so DRIVE, MIX, FOG, FEEDBACK, the filters, stereo and the clock behave the same. It's original code: an homage to boutique micro-loop pedals, not a port of any of them.
 
+**Note:** with DELAY SYNC on, Shuffle and Drone make no sound until a clock is present.
+
 **TIME RANGE** picks the mode, **MOD RATE** picks one of four variations (four zones, bottom to top), and **MOD DEPTH** sets how much each variation does.
 
 | Mode | What it does |
@@ -59,7 +61,7 @@ Seal Microloops is a micro-looper hiding behind BBD. A few short loops of what y
 | HPF / LPF | Filters on the loops and their feedback. The slider ends bypass them |
 | FOG | Reverb, as in Seal Beads. IN smears the audio before it's looped, DLY puts it on the loops, MIX on everything |
 | DRIVE / MIX | Matched to the stock Sealegs drive, input trim, drive position and equal-power MIX |
-| DELAY SYNC | Locks loop lengths, Shuffle steps and the Drone breathing and sweep to CLK IN or tap tempo. Hold 1 s to clear the loop memory |
+| DELAY SYNC | Locks loop lengths, Shuffle steps and the Drone breathing and sweep to CLK IN or tap tempo. Hold 1 s to clear the loop memory. Shuffle and Drone stay silent while DELAY SYNC is on until a clock is present |
 | MOD SYNC | Triplets: lengths and steps × 2/3 |
 | TAP | Tap tempo when no clock is running. Breathes orange while Seal Microloops is on |
 | STEREO CONFIG | PONG and T:W spread the loops across the stereo field. L/R keeps them in place |
