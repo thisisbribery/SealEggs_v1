@@ -21,7 +21,7 @@ No firmware is hosted here. You load the official `Sealegs.1.3.5.0.bin`, choose 
 | BBD light mode | BBD internal filter cap raised from 4.2 kHz to 12 kHz. | None |
 | Tape bright (extra) | Removes two built-in Tape tone shelves (about +3 to +5.5 dB above 1 kHz). | None |
 | **Seal Microloops (new)** | A micro-loop mode behind BBD: a few short loops of what you just played repeat, change speed, get rearranged or hold into drones. Three modes (Octaves, Shuffle, Drone), four variations each. Shares the Seal Beads shell. | With MODEL on BBD, hold **FREEZE (ALT)** + **DELAY SYNC** for about 1 s to enter or leave. **TAP** glows orange while it's on. |
-| **Seal Beads (new)** | A granular mode in the Digi slot, inspired by Mutable Instruments Beads. Heavily modified, not a 1-to-1 port (see below). | With MODEL on DIGI, hold **FREEZE (ALT)** + **DELAY SYNC** for about 1 s to enter or leave. **TAP** glows teal while it's on. |
+| **Seal Beads V2 (new)** | A granular mode in the Digi slot, inspired by Mutable Instruments Beads. Heavily modified, not a 1-to-1 port (see below). | With MODEL on DIGI, hold **FREEZE (ALT)** + **DELAY SYNC** for about 1 s to enter or leave. **TAP** glows teal while it's on. |
 
 Mods can be mixed freely, with three rules: Live reverse needs Digi doppler (Digi reverse follows TIME through the doppler engine), Seal Beads needs Live reverse, and Seal Microloops needs Seal Beads (they share one engine shell). Reverse, character and doppler share one engine, which is added once.
 
@@ -67,11 +67,11 @@ Seal Microloops is a micro-looper hiding behind BBD. A few short loops of what y
 
 Seal Microloops is original code. It contains no code or data from any commercial product and isn't affiliated with or endorsed by any pedal maker.
 
-## Seal Beads
+## Seal Beads V2
 
 Seal Beads is a **heavily modified Beads**. Don't think of it as a 1-to-1 port of the Mutable Instruments module.
 
-**Latest update:** a softer COLOR (shape) with a new buttery end, smoother Overlap, and Scatter is now Spray.
+**New in V2:** a softer COLOR (shape) with a new buttery end, smoother Overlap, and Scatter is now Spray.
 
 - **Built for the Sealegs:** it deliberately departs from the original to fit the Sealegs architecture, panel and CPU budget.
 - **Tuned by ear:** it was tuned to work for both rhythmic and melodic material, from clocked drum chops and reshuffled slices to long, buttery, overlapping clouds.
@@ -117,7 +117,7 @@ Seal Beads contains code from Mutable Instruments Beads and stmlib by Emilie Gil
 
 The patches were verified in an ARM Cortex-M7 emulator running the firmware's own DSP code: bit-exact comparisons between builds, randomised sessions (model switches, reverse, character, time and feedback changes, delay-memory clears) and button-gesture tests. Reverse, character and the stability fixes were also tested on hardware. Newer combinations (reverse without character, character or doppler on their own, character with stock Digi) have so far been verified in emulation only.
 
-Seal Beads was developed and played on hardware with the full reverse + character build. In the emulator, every Seal Beads combination was checked: Tape, BBD and Digi are bit-identical to the same build without Seal Beads while it's off, and Seal Beads itself behaves identically whichever other mods are installed. Its own test suite (clock handling, controls, levels, FOG stress and CPU load) passes on the published build.
+Seal Beads was developed and played on hardware with the full reverse + character build, and V2 has been played on hardware. In the emulator, every Seal Beads combination was checked: Tape, BBD and Digi are bit-identical to the same build without Seal Beads while it's off, and Seal Beads itself behaves identically whichever other mods are installed. Its own test suite (clock handling, controls, levels, FOG stress and CPU load) passes on the published build.
 
 Seal Microloops was developed and played on hardware with the full build plus Seal Beads. Its latest version (a fix for Shuffle stalling while TIME or WIDTH moved) has been verified in the emulator: the three modes and their variations, levels, CPU load, and a stress test of fast control moves. Every Seal Microloops combination was checked: Tape, BBD and Digi are bit-identical to the same build without it while it's off, Seal Beads is unchanged, and Seal Microloops behaves identically whichever other mods are installed.
 
