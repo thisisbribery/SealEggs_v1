@@ -6,7 +6,7 @@ Mods by **Bribery** ([@thisisbribery](https://www.instagram.com/thisisbribery/))
 
 A browser tool that adds community mods to **your own copy** of the official Sealegs 1.3.5.0 firmware.
 
-**[Open the flasher](https://thisisbribery.github.io/SealEggs_v1/)**
+**[Open the flasher](https://www.thisisbribery.com/sealeggs/)**
 
 No firmware is hosted here. You load the official `Sealegs.1.3.5.0.bin`, choose mods, and the page writes a modified copy in your browser. Nothing is uploaded.
 
