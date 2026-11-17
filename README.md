@@ -4,6 +4,8 @@
 
 Mods by **Bribery** ([@thisisbribery](https://www.instagram.com/thisisbribery/)).
 
+**Support:** find it useful? [Buy me a coffee on Ko-fi](https://ko-fi.com/thisisbribery).
+
 A browser tool that adds community mods to **your own copy** of the official Sealegs 1.3.5.0 firmware.
 
 **[Open the flasher](https://www.thisisbribery.com/sealeggs/)**
