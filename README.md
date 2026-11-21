@@ -134,7 +134,22 @@ Flash your original `Sealegs.1.3.5.0.bin` using the official update procedure.
 - `index.html`: the flasher (no build step, no dependencies)
 - `mods.js`: patch data (added code and changed constants only) plus reference hashes
 - `assets/`: the coin sprites
+- `LICENSE.md`: the Seal Eggs licence (PolyForm Noncommercial 1.0.0 plus additional permissions)
 - `LICENSE-beads.txt`: the MIT licence for the Beads and stmlib code inside Seal Beads
+
+## Licence
+
+Required Notice: Copyright 2026 Bribery (https://thisisbribery.com)
+
+Seal Eggs is licensed under the [PolyForm Noncommercial License 1.0.0](LICENSE.md), plus two additional permissions. Full terms are in [LICENSE.md](LICENSE.md).
+
+- **Free for noncommercial use.** Use it, study it, change it and share it.
+- **Forks are welcome** on the same noncommercial terms. Keep the `Required Notice:` line, include or link the licence, and credit Bribery's Seal Eggs.
+- **Make and sell music with it**, including paid gigs, sessions and releases.
+- **Don't sell it.** No selling the firmware, patch data, changed versions, pre-flashed modules or paid packs that include it without written permission.
+- **Intellijel** may use Seal Eggs commercially, for example in official Sealegs firmware.
+
+The licence covers Bribery's own work only. Intellijel's firmware stays Intellijel's, and the Beads and stmlib code stays under the MIT licence ([LICENSE-beads.txt](LICENSE-beads.txt)). For any other commercial use, contact Bribery through [thisisbribery.com](https://thisisbribery.com).
 
 ## Disclaimer
 
