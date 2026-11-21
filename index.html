@@ -257,6 +257,7 @@ dialog.risk::backdrop{background:rgba(0,0,0,.55)}
   <h3>Credits</h3>
   <p>Seal Beads contains code from Mutable Instruments Beads and stmlib by Emilie Gillet, used under the MIT licence (<a href="LICENSE-beads.txt">licence text</a>). It is an independent, heavily modified derivative and isn't affiliated with or endorsed by Mutable Instruments.</p>
   <p>Seal Microloops is original code, an homage to a style of effect. It contains no code or data from any commercial product and isn't affiliated with or endorsed by any pedal maker.</p>
+  <p>Seal Eggs is licensed under the PolyForm Noncommercial License 1.0.0, with extra permissions to make and sell music with it and for Intellijel to use it commercially (<a href="https://thisisbribery.com/sealeggs/LICENSE.txt">full licence</a>). Free to use, change and share for noncommercial purposes, forks welcome. Selling the firmware or pre-flashed modules isn't allowed. Required Notice: Copyright 2026 Bribery (https://thisisbribery.com)</p>
 </footer>
 </div>
 
@@ -525,7 +526,7 @@ document.getElementById('notesBtn').addEventListener('click', () => {
   const strip = h => h.replace(/<[^>]+>/g,'');
   const lines = ['Seal Eggs firmware flasher: build notes','', 'Firmware: '+builtName, 'Base: official Sealegs 1.3.5.0 (SHA-256 '+D.sha256+')', 'Result SHA-256: '+builtHash, '', 'Mods:'];
   for (const m of MODS) if (sel[m.key]) lines.push('', '* '+m.title, '  '+m.text, '  Controls: '+strip(m.ctl), '  Note: '+m.note);
-  lines.push('', 'Rollback: flash your original Sealegs.1.3.5.0.bin with the official update procedure.', 'Unofficial community modification by Bribery (@thisisbribery). Not affiliated with, endorsed by or supported by Intellijel. Use entirely at your own risk.');
+  lines.push('', 'Rollback: flash your original Sealegs.1.3.5.0.bin with the official update procedure.', 'Unofficial community modification by Bribery (@thisisbribery). Not affiliated with, endorsed by or supported by Intellijel. Use entirely at your own risk.', '', 'Licence: PolyForm Noncommercial License 1.0.0 plus additional permissions, full terms at https://thisisbribery.com/sealeggs/LICENSE.txt', 'Required Notice: Copyright 2026 Bribery (https://thisisbribery.com)', 'Seal Beads contains Beads and stmlib code by Emilie Gillet under the MIT licence: https://thisisbribery.com/sealeggs/LICENSE-beads.txt');
   save(builtName.replace(/\.bin$/, '.notes.txt'), lines.join('\n'), 'text/plain');
 });
 
